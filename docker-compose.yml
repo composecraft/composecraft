@@ -1,0 +1,35 @@
+name: compose craft
+services:
+  saas:
+    image: composecraft/composecraft:latest
+    ports:
+      - 3000:3000
+    environment:
+      - CORE_ONLY=true
+      - URL=http://localhost:3000
+      - SECRET_KEY=changeme
+      - MONGODB_URI=mongodb://dev:dev@db
+    depends_on:
+      - db
+    networks:
+      - internal
+  db:
+    image: mongo:latest
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=dev
+      - MONGO_INITDB_ROOT_PASSWORD=dev
+    ports:
+      - 27017:27017
+    networks:
+      - internal
+    volumes:
+      - mongo_data:/data/db
+networks:
+  internal:
+    driver: bridge
+    attachable: false
+    external: false
+volumes:
+  mongo_data:
+    driver: local
+    external: false

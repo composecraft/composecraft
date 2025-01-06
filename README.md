@@ -18,7 +18,7 @@
 
 You can use the online tool under [composecraft.com](https://composecraft.com).
 
-Or SelfHost the took by yourself.
+Or SelfHost the tool by yourself.
 
 ## Self-Host
 

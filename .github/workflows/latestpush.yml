@@ -1,0 +1,32 @@
+name: Docker Image Push
+
+on:
+  workflow_run:
+    workflows: ["Docker Image CI"]
+    types:
+      - completed
+
+jobs:
+  push-image:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'main' }}
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download Docker image artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: composecraft-docker-image
+
+    - name: Load Docker image from artifact
+      run: docker load -i composecraft-latest.tar
+
+    - name: Log in to Docker Hub
+      env:
+        DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+        DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+      run: echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+    - name: Push Docker image to Docker Hub
+      run: |
+        docker tag composecraft:latest ${{ secrets.DOCKER_USERNAME }}/composecraft:latest
+        docker push ${{ secrets.DOCKER_USERNAME }}/composecraft:latest

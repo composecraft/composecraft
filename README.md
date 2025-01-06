@@ -60,5 +60,11 @@ pnpm run dev
 - MONGODB_URI : Used to connect to mongodb
 - URL : The base url used for some redirect and public link generation
 - CORE_ONLY : Disable SaaS hosted features (to allow simple self-host)
+- DISABLE_TELEMETRY : Disable telemetry
+
+### Telemetry
+
+By default, the app collect basic website telemetry with as self-hosted instance of [umami](https://umami.is).
+But if you want to disable it, you can just set DISABLE_TELEMETRY=true in envs.
 
 

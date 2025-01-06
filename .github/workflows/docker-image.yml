@@ -30,6 +30,7 @@ jobs:
     - name: Build and push multi-arch Docker image
       run: |
         VERSION=$(jq -r .version package.json)
+        COMMIT_SHA=$(echo $GITHUB_SHA | cut -c1-7)
         docker buildx build \
           --platform linux/amd64,linux/arm64 \
           --file Dockerfile \

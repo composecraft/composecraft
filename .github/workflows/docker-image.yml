@@ -32,5 +32,5 @@ jobs:
         docker buildx build \
           --platform linux/amd64,linux/arm64 \
           --file Dockerfile \
-          --tag composecraft:latest \
+          --tag ${{ secrets.DOCKER_USERNAME }}/composecraft:latest \
           --push .

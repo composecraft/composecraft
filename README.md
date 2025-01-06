@@ -27,11 +27,17 @@ If you want to try the tool on your own infra you can use the `docker-compose.ym
 ```bash
 docker compose up
 ```
- Then, the app will be avaible under http://localhost:3000
+ Then, the app will be available under http://localhost:3000
+
+Here is a quick view of the stack 😉 : 
+
+![](./assets/composecraftcompose.png)
 
 > Note: the library and the sign in with github won't work.
 
 ## Documentation
+
+The complete doc is available under [https://composecraft.com/docs/](https://composecraft.com/docs/)
 
 The project is built with nextjs Typescript and use react-flow for the nodal GUI.
 The database is mongodb.

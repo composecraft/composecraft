@@ -35,4 +35,5 @@ jobs:
           --file Dockerfile \
           --tag ${{ secrets.DOCKER_USERNAME }}/composecraft:latest \
           --tag ${{ secrets.DOCKER_USERNAME }}/composecraft:${VERSION} \
+          --tag ${{ secrets.DOCKER_USERNAME }}/composecraft:${COMMIT_SHA} \
           --push .

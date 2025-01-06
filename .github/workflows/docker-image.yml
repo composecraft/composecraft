@@ -14,9 +14,20 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
-    
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag composecraft:latest
+
+    - name: Set up QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build and push multi-arch Docker image
+      run: |
+        docker buildx build \
+          --platform linux/amd64,linux/arm64 \
+          --file Dockerfile \
+          --tag composecraft:latest \
+          .
 
     - name: Save Docker image to file
       run: docker save composecraft:latest -o composecraft-latest.tar

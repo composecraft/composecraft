@@ -1,0 +1,28 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Build the Docker image
+      run: docker build . --file Dockerfile --tag composecraft:latest
+
+    - name: Save Docker image to file
+      run: docker save composecraft:latest -o composecraft-latest.tar
+
+    - name: Upload Docker image as artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: composecraft-docker-image
+        path: composecraft-latest.tar

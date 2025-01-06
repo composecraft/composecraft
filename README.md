@@ -3,7 +3,7 @@
     <img src="./assets/logo_mark.jpg" width="300px">
 </div>
 
-Compose craft is a tool to help you manage, edit and share docker compose files in a GUI way.
+[Compose craft](https://composecraft.com) is a tool to help you manage, edit and share docker compose files in a GUI way.
 
 <img src="./assets/demo-img.png">
 
@@ -22,12 +22,37 @@ Or SelfHost the took by yourself.
 
 ## Self-Host
 
+If you want to try the tool on your own infra you can use the `docker-compose.yml` file by running :
 
+```bash
+docker compose up
+```
+ Then, the app will be avaible under http://localhost:3000
+
+> Note: the library and the sign in with github won't work.
 
 ## Documentation
 
 The project is built with nextjs Typescript and use react-flow for the nodal GUI.
 The database is mongodb.
 
+You can run the project with : (also possible with npm and yarn)
+
+```bash
+pnpm install
+```
+
+```bash
+pnpm run dev
+```
+
+> Note: you have to provide a mongodb connection string and a secret key
+
+### Environment variables:
+
+- SECRET_KEY : The key used to sign JWT tokens
+- MONGODB_URI : Used to connect to mongodb
+- URL : The base url used for some redirect and public link generation
+- CORE_ONLY : Disable SaaS hosted features (to allow simple self-host)
 
 

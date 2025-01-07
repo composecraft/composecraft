@@ -6,7 +6,7 @@ body:
     id: title
     attributes:
       label: Title
-      description: Provide a short title.
+      description: Provide your product title.
       placeholder: Enter the title
     validations:
       required: true
@@ -24,16 +24,26 @@ body:
       label: Description
       description: Add a short description.
       placeholder: Enter your description
-  - type: markdown
+  - type: textarea
     attributes:
+      label: Description
+      description: "Add a long description in markdown, with the following content :"
       value: |
         # Overview
         ## Key Features
         ## Use Cases
         ## Benefits
+    validations:
+      required: true
   - type: input
     id: doc
     attributes:
       label: Doc
       description: Provide a link to a related document (if applicable).
       placeholder: Enter a URL
+  - type: input
+    id: logo
+    attributes:
+      label: Logo
+      description: Provide your product logo (give an url).
+      placeholder: https://...

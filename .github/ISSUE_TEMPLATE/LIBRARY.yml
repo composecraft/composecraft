@@ -1,0 +1,39 @@
+name: Submit a new tool to the library
+description: Use this form if you want to list your tool under https://composecraft.com/library
+labels: ['library']
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Title
+      description: Provide a short title.
+      placeholder: Enter the title
+    validations:
+      required: true
+  - type: input
+    id: compose
+    attributes:
+      label: Compose craft share public link or link to your stack compose file anywhere (like your git)
+      description: You can past a link like https://composecraft.com/share?id=677c6dd6218fc31999c1b899 or submit any link to a compose file
+      placeholder: Enter the link
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Add a short description.
+      placeholder: Enter your description
+  - type: markdown
+    attributes:
+      value: |
+        # Overview
+        ## Key Features
+        ## Use Cases
+        ## Benefits
+  - type: input
+    id: doc
+    attributes:
+      label: Doc
+      description: Provide a link to a related document (if applicable).
+      placeholder: Enter a URL

@@ -21,7 +21,7 @@ body:
   - type: textarea
     id: description
     attributes:
-      label: Description
+      label: Description (short)
       description: Add a short description.
       placeholder: Enter your description
   - type: textarea

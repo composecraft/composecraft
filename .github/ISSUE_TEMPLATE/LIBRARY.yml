@@ -24,6 +24,8 @@ body:
       label: Description (short)
       description: Add a short description.
       placeholder: Enter your description
+    validations:
+      required: true
   - type: textarea
     attributes:
       label: Description

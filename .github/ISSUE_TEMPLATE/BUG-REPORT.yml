@@ -9,28 +9,33 @@ body:
       options:
         - Self-hosted
         - Cloud
+    validations:
       required: true
   - type: input
     attributes:
       label: Which browser do you use?
       description: Specify the browser you were using (e.g., Chrome, Firefox, Safari).
       placeholder: e.g., Chrome 118.0
+    validations:
       required: true
   - type: input
     attributes:
       label: What OS do you use?
       description: Specify your operating system (e.g., Windows 11, macOS 14, Ubuntu 22.04).
       placeholder: e.g., Ubuntu 22.04
+    validations:
       required: true
   - type: textarea
     attributes:
       label: Describe the bug
       description: Provide a detailed description of the issue, including steps to reproduce it.
       placeholder: Include what you expected to happen and what actually happened.
+    validations:
       required: true
   - type: textarea
     attributes:
       label: Environment variables (non-sensitive)
       description: List the environment variables you use (excluding sensitive ones such as secrets or tokens).
       placeholder: e.g., NODE_ENV=production, ENABLE_FEATURE_X=true
+    validations:
       required: false

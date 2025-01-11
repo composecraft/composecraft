@@ -15,7 +15,7 @@ importers:
         specifier: ^1.1.4
         version: 1.1.4
       '@hookform/resolvers':
-        specifier: ^3.9.0
+        specifier: ^3.9.1
         version: 3.9.1(react-hook-form@7.53.1(react@18.3.1))
       '@monaco-editor/react':
         specifier: ^4.6.0
@@ -66,7 +66,7 @@ importers:
         specifier: ^8.20.5
         version: 8.20.5(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@xyflow/react':
-        specifier: ^12.3.2
+        specifier: ^12.3.4
         version: 12.3.4(@types/react@18.3.12)(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       '@xyflow/system':
         specifier: ^0.0.45
@@ -87,7 +87,7 @@ importers:
         specifier: ^2.1.1
         version: 2.1.1
       cookie:
-        specifier: ^1.0.0
+        specifier: ^1.0.1
         version: 1.0.1
       date-fns:
         specifier: ^4.1.0
@@ -96,16 +96,16 @@ importers:
         specifier: ^0.9.3
         version: 0.9.3
       jose:
-        specifier: ^5.9.3
+        specifier: ^5.9.6
         version: 5.9.6
       lucide-react:
         specifier: ^0.451.0
         version: 0.451.0(react@18.3.1)
       mongodb:
-        specifier: ^6.9.0
+        specifier: ^6.10.0
         version: 6.10.0
       mongoose:
-        specifier: ^8.7.1
+        specifier: ^8.8.0
         version: 8.8.0
       next:
         specifier: 14.2.15
@@ -117,16 +117,16 @@ importers:
         specifier: ^5.0.0
         version: 5.0.0(@types/react@18.3.12)(acorn@8.14.0)(react@18.3.1)
       next-safe-action:
-        specifier: ^7.9.3
+        specifier: ^7.9.9
         version: 7.9.9(next@14.2.15(react-dom@18.3.1(react@18.3.1))(react@18.3.1))(react-dom@18.3.1(react@18.3.1))(react@18.3.1)(zod@3.23.8)
       react:
-        specifier: ^18
+        specifier: ^18.3.1
         version: 18.3.1
       react-dom:
-        specifier: ^18
+        specifier: ^18.3.1
         version: 18.3.1(react@18.3.1)
       react-hook-form:
-        specifier: ^7.53.0
+        specifier: ^7.53.1
         version: 7.53.1(react@18.3.1)
       react-hot-toast:
         specifier: ^2.4.1
@@ -135,7 +135,7 @@ importers:
         specifier: ^5.0.1
         version: 5.0.1(react-dom@18.3.1(react@18.3.1))(react@18.3.1)
       tailwind-merge:
-        specifier: ^2.5.3
+        specifier: ^2.5.4
         version: 2.5.4
       tailwindcss-animate:
         specifier: ^1.0.7
@@ -153,7 +153,7 @@ importers:
         specifier: ^2.0.2
         version: 2.0.2(zod@3.23.8)
       zustand:
-        specifier: ^5.0.0
+        specifier: ^5.0.1
         version: 5.0.1(@types/react@18.3.12)(react@18.3.1)(use-sync-external-store@1.2.2(react@18.3.1))
     devDependencies:
       '@types/bcrypt':
@@ -163,34 +163,34 @@ importers:
         specifier: ^9.0.7
         version: 9.0.7
       '@types/node':
-        specifier: ^20
+        specifier: ^20.17.6
         version: 20.17.6
       '@types/react':
-        specifier: ^18
+        specifier: ^18.3.12
         version: 18.3.12
       '@types/react-dom':
-        specifier: ^18
+        specifier: ^18.3.1
         version: 18.3.1
       eslint:
-        specifier: ^8
+        specifier: ^8.57.1
         version: 8.57.1
       eslint-config-next:
         specifier: 14.2.15
         version: 14.2.15(eslint@8.57.1)(typescript@5.6.3)
       eslint-plugin-react-refresh:
-        specifier: ^0.4.12
+        specifier: ^0.4.14
         version: 0.4.14(eslint@8.57.1)
       postcss:
-        specifier: ^8
+        specifier: ^8.4.47
         version: 8.4.47
       sharp:
         specifier: ^0.33.5
         version: 0.33.5
       tailwindcss:
-        specifier: ^3.4.1
+        specifier: ^3.4.14
         version: 3.4.14
       typescript:
-        specifier: ^5
+        specifier: ^5.6.3
         version: 5.6.3
 
 packages:

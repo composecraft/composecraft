@@ -42,24 +42,3 @@ export async function AuthWithGithub(cli:boolean){
     const link = `https://github.com/login/oauth/authorize?client_id=${githubClientId}&response_type=code&scope=read:user&redirect_uri=${redirectUri}${cli ? "/cli": ""}&state=${randomString}`;
     redirect(link)
 }
-
-export async function createGithubIssue(fileContent:string){
-    const text = `An error while reading the following file happened :
-\`\`\`yaml
-${fileContent}
-\`\`\`
-    
-To solve this issue, a test including this file have to be added.
-    `
-    await axios.post("https://api.github.com/repos/composecraft/composecraft/issues",
-        {
-            title: "Error while reading a compose file",
-            body: text,
-            labels: ["yaml-read","bug"]
-        },
-        {headers:{
-                Authorization: `Bearer ${process.env.GITHUB_TOKEN}`
-            }})
-    return true
-}
-

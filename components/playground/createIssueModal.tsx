@@ -9,9 +9,17 @@ import {
     DialogTitle
 } from "@/components/ui/dialog";
 import {Button} from "@/components/ui/button";
-import {createGithubIssue} from "@/actions/github";
 
 export default function CreateIssueModal({content,open,close}:{content:string,open:boolean,close:()=>void}){
+
+    function createGithubIssue(content:string){
+        const encodedContent = encodeURIComponent(`
+\`\`\`yaml
+${content}
+\`\`\`
+`);
+        window.location.href = `https://github.com/composecraft/docker-compose-lib/issues/new?assignees=&title=Error%20Reading%20file&labels=bug&projects=&template=FILE_READING.yml&file=${encodedContent}`
+    }
 
     return (
         <Dialog open={open}>
@@ -31,7 +39,7 @@ export default function CreateIssueModal({content,open,close}:{content:string,op
                     <Button onClick={()=>{close()}} variant={"destructive"}>
                         Cancel
                     </Button>
-                    <Button onClick={async ()=>{await createGithubIssue(content);close()}}>
+                    <Button onClick={async ()=>{createGithubIssue(content);close()}}>
                         Submit issue
                     </Button>
                 </DialogFooter>

@@ -48,23 +48,36 @@ export const getComposeByShareId = async (shareId: string) => {
 
     await client.connect();
     const db = client.db("compose_craft");
-    const collection = db.collection("composeShare");
+    const collection = db.collection("shares");
 
     try {
         // Convert the composeId string to ObjectId
-        const compose = await collection.findOne({
-            _id: new ObjectId(shareId)
-        });
+        const compose = await collection.aggregate([
+            {
+                $match: { _id: new ObjectId(shareId) }
+            },
+            {
+                $lookup: {
+                    from: "composes", // The name of the collection containing compose data
+                    localField: "composeId", // The field in shares
+                    foreignField: "_id", // The field in composes
+                    as: "composeDetails" // The resulting field
+                }
+            },
+            {
+                $limit: 1 // Ensures only one document is returned
+            }
+        ]).toArray();
 
         // Return undefined if no compose is found
-        if (!compose) {
+        if (!compose[0]) {
             return undefined;
         }
 
         // Return the formatted compose data
         return {
-            id: compose._id.toString(),
-            data: compose.data
+            id: compose[0].composeId.toString(),
+            data: compose[0].composeDetails
         };
     } catch (error) {
         console.error(error);

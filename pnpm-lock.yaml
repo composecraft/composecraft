@@ -9,8 +9,8 @@ importers:
   .:
     dependencies:
       '@composecraft/docker-compose-lib':
-        specifier: ^1.2.16
-        version: 1.2.16
+        specifier: ^1.3.1
+        version: 1.3.1
       '@dagrejs/dagre':
         specifier: ^1.1.4
         version: 1.1.4
@@ -207,8 +207,8 @@ packages:
     resolution: {integrity: sha512-Ed61U6XJc3CVRfkERJWDz4dJwKe7iLmmJsbOGu9wSloNSFttHV0I8g6UAgb7qnK5ly5bGLPd4oXZlxCdANBOWQ==}
     engines: {node: '>=6.9.0'}
 
-  '@composecraft/docker-compose-lib@1.2.16':
-    resolution: {integrity: sha512-6Qz7W75SbRGl1VlO77yaFzNgjoR1Are5I9GBd/W72TCEQzwrMzW43SMgeNpeNDtv5YkxVisiFNLoR08bshgBwg==}
+  '@composecraft/docker-compose-lib@1.3.1':
+    resolution: {integrity: sha512-Sk2v3RVK5cONhm0hA5xYPo4hqsSPlV57JqcMkQOKoKbv9ojN0uy8vxMVDe+cseNv/1cFq9zPjxdXLYD6YsyTXw==}
 
   '@dagrejs/dagre@1.1.4':
     resolution: {integrity: sha512-QUTc54Cg/wvmlEUxB+uvoPVKFazM1H18kVHBQNmK2NbrDR5ihOCR6CXLnDSZzMcSQKJtabPUWridBOlJM3WkDg==}
@@ -3248,7 +3248,7 @@ snapshots:
 
   '@babel/helper-validator-identifier@7.25.9': {}
 
-  '@composecraft/docker-compose-lib@1.2.16': {}
+  '@composecraft/docker-compose-lib@1.3.1': {}
 
   '@dagrejs/dagre@1.1.4':
     dependencies:

@@ -229,29 +229,40 @@ export default function ServiceEditor(){
                                     <div className='flex flex-col w-full'>
                                         <label className="text-sm">Container</label>
                                         {/*@ts-expect-error tkt*/}
-                                        <Input value={port.containerPort} onChange={(e)=>setCompose(()=>getService().ports[index].containerPort =Number(e.target.value))}/>
+                                        <Input value={port.containerPort} onChange={(e) => setCompose(() => getService().ports[index].containerPort = Number(e.target.value))}/>
                                     </div>
-                                    <Button type="button" className="bg-slate-200" variant="secondary" onClick={()=>setCompose(()=>{
-                                        getService().ports?.splice(index,1)
-                                    })}>
-                                        <Eraser />
+                                    <Button type="button" className="bg-slate-200" variant="secondary"
+                                            onClick={() => setCompose(() => {
+                                                getService().ports?.splice(index, 1)
+                                            })}>
+                                        <Eraser/>
                                     </Button>
                                 </div>
                                 <Separator/>
                             </>
                         ))}
-                        <Button data-umami-event="playground-editor-input-addPortExpose" type="button" onClick={() => setCompose(() => {
-                            const servicePorts = getService().ports
-                            if (servicePorts) {
-                                servicePorts.push(new PortMapping({containerPort: 80, hostPort: 80}))
-                            } else {
-                                getService().ports = [
-                                    new PortMapping({containerPort: 80, hostPort: 80})
-                                ]
-                            }
-                        })} className="flex flex-row gap-2">
-                            <EthernetPort height={20} />Add mapping
+                        <Button data-umami-event="playground-editor-input-addPortExpose" type="button"
+                                onClick={() => setCompose(() => {
+                                    const servicePorts = getService().ports
+                                    if (servicePorts) {
+                                        servicePorts.push(new PortMapping({containerPort: 80, hostPort: 80}))
+                                    } else {
+                                        getService().ports = [
+                                            new PortMapping({containerPort: 80, hostPort: 80})
+                                        ]
+                                    }
+                                })} className="flex flex-row gap-2">
+                            <EthernetPort height={20}/>Add mapping
                         </Button>
+                        <Separator/>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="network_mode">Network mode</label>
+                            <Input name="network_mode" value={getService().network_mode || ""}
+                                   onChange={(e) => {
+                                       setCompose(() => getService().network_mode = e.target.value)
+                                   }}
+                            />
+                        </div>
                     </div>
                 </TabsContent>
                 <TabsContent className="flex flex-col gap-5 w-full" value="health">

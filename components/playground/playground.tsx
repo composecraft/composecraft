@@ -353,6 +353,7 @@ return (
         onEdgesChange={handleSelection}
         //@ts-ignore
         onKeyDown={handleKeyPress}
+        minZoom={Number.NEGATIVE_INFINITY}
         onPaneClick={() => {
             setSelectedString("")
         }}

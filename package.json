@@ -1,6 +1,6 @@
 {
   "name": "next-compose-craft",
-  "version": "0.7.10",
+  "version": "0.7.11",
   "private": true,
   "scripts": {
     "dev": "next dev",

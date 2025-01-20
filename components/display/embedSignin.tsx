@@ -23,8 +23,12 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
 
     const {execute} = useAction(registerUser,{
         //onSuccess:()=>{router.push("/dashboard")},
-        onError:(()=>{
-            toast.error("this email is probably already used")
+        onError:((e)=>{
+            if(e?.error?.serverError){
+                toast.error(e?.error?.serverError.toString())
+            }else{
+                toast.error("this email is probably already used")
+            }
         })
     })
 

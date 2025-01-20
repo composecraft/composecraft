@@ -19,6 +19,7 @@ import VolumeNode from "@/components/playground/node/volumeNode";
 import BindingNode from "@/components/playground/node/bindingNode";
 import EnvNode from "@/components/playground/node/envNode";
 import usePositionMap from "@/store/metadataMap";
+import {handleBackspacePress} from "./playgroundUtils";
 
 export type NodeData = {
     position: XYPosition,
@@ -332,114 +333,8 @@ function handleKeyPress(event: KeyboardEvent) {
     // Handle specific keys
     switch (keyPressed) {
         case 'Backspace':
-            switch (select.substring(0, 3)) {
-                case "edg":
-                    setCompose((compose) => {
-                        switch (select.substring(4, 4 + 3)) {
-                            case "ser":
-                                const target = compose.services.get("id", select.substring(44))
-                                const source = compose.services.get("id", select.substring(4, 44))
-                                if (source && target) {
-                                    target.depends_on.delete(source)
-                                }
-                                break
-                            case "net":
-                                const ser = compose.services.get("id", select.substring(44))
-                                const net = compose.networks.get("id", select.substring(4, 44))
-                                if (ser && net) {
-                                    ser.networks.delete(net)
-                                }
-                                break
-                            case "env":
-                                const env_ser = compose.services.get("id", select.substring(44))
-                                const env = compose.envs.get("id", select.substring(4, 44))
-                                if (env_ser && env) {
-                                    env_ser.environment?.delete(env)
-                                }
-                                break
-                            case "vol":
-                                const vol_ser = compose.services.get("id", select.substring(44))
-                                if (vol_ser) {
-                                    vol_ser.bindings.forEach((bin) => {
-                                        if ((bin.source as Volume)?.id === select.substring(4, 44)) {
-                                            vol_ser.bindings.delete(bin)
-                                        }
-                                    })
-                                }
-                                break
-                            case "bin":
-                                const bin_ser = compose.services.get("id", select.substring(44))
-                                if (bin_ser) {
-                                    bin_ser.bindings.forEach((bin) => {
-                                        if ((bin.id as string) === select.substring(4, 44)) {
-                                            bin_ser.bindings.delete(bin)
-                                        }
-                                    })
-                                }
-                                break
-                            default:
-                                //console.log(select.substring(4,4+3))
-                                break
-                        }
-                    })
-                    break;
-                case "ser" :
-                    setCompose((compose) => {
-                        const ser = compose.services.get("id", select)
-                        if (ser) {
-                            setSelectedString("")
-                            compose.services.delete(ser)
-                        }
-                    })
-                    break
-                case "net":
-                    setCompose((compose) => {
-                        const net = compose.networks.get("id", select)
-                        if (net) {
-                            setSelectedString("")
-                            compose.networks.delete(net)
-                        }
-                    })
-                    break
-                case "env":
-                    setCompose((compose) => {
-                        const env = compose.envs.get("id", select)
-                        if (env) {
-                            setSelectedString("")
-                            compose.removeEnv(env)
-                        }
-                    })
-                    break
-                case "bin":
-                    setCompose((compose) => {
-                        compose.services.forEach((ser) => {
-                            ser.bindings.forEach((bin) => {
-                                if (bin.id === select) {
-                                    ser.bindings.delete(bin)
-                                }
-                            })
-                        })
-                    })
-                    break
-                case "vol":
-                    setCompose((compose) => {
-                        compose.services.forEach((ser) => {
-                            ser.bindings.forEach((bin) => {
-                                const src = bin.source as Volume
-                                if (src?.id === select) {
-                                    ser.bindings.delete(bin)
-                                }
-                            })
-                        })
-                        const volume = compose.volumes.get('id', select)
-                        if (volume) {
-                            compose.volumes.delete(volume)
-                        }
-                    })
-                    break
-                default:
-                    break
-            }
+        case 'Delete':
+            handleBackspacePress(select,setCompose,setSelectedString)
             break;
         default:
             //console.log(`${keyPressed} key pressed`);

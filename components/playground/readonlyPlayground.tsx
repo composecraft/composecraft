@@ -30,8 +30,10 @@ export default function ReadOnlyPlayGround(opt:options){
         if(opt.compose){
             const c = Translator.fromDict(opt.compose)
             setCompose(c)
-            reHydrateComposeIds(c,opt.positionMap)
-            setPositionMap(recreatePositionMap(opt.positionMap.positionMap))
+            if(opt.positionMap){
+                reHydrateComposeIds(c,opt.positionMap)
+                setPositionMap(recreatePositionMap(opt.positionMap.positionMap))
+            }
         }
     }, []);
 

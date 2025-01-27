@@ -36,6 +36,7 @@ const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
     const [select, setSelect] = useState("")
     const {positionMap, setPositionMap} = usePositionMap()
     const {setSelectedString} = useSelectionStore()
+    const [isDraggable, setIsDraggable] = useState(true)
 
     const updatePosition = (key: string, newPosition: XYPosition) => {
         const currentEntry = positionMap.get(key);
@@ -144,6 +145,10 @@ useImperativeHandle(ref, () => ({
 const onNodesChanges = useCallback(
     // eslint-disable-next-line
     (changes: any[]) => {
+        if(!isDraggable) {
+            return;
+        }
+
         changes.forEach((change) => {
             if (change?.type === "position") {
                 if (change?.position?.x && change?.position?.y) {
@@ -153,7 +158,7 @@ const onNodesChanges = useCallback(
             }
         })
     },
-    [positionMap]
+    [positionMap, isDraggable]
 )
 
 // eslint-disable-next-line
@@ -353,11 +358,14 @@ return (
         onEdgesChange={handleSelection}
         //@ts-ignore
         onKeyDown={handleKeyPress}
+        minZoom={Number.NEGATIVE_INFINITY}
         onPaneClick={() => {
             setSelectedString("")
         }}
     >
-        <Controls/>
+        <Controls
+            onInteractiveChange={(isInteractive) => setIsDraggable(isInteractive)}
+        />
         <Background variant={"dots" as BackgroundVariant} gap={12} size={1}/>
     </ReactFlow>
 )

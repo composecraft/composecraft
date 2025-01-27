@@ -74,6 +74,10 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
 export const registerUser = actionClient
     .schema(registerSchema)
     .action(async ({parsedInput: {email, password, company, terms,data}}) => {
+        if(process.env.DISABLE_SIGNUP){
+            console.error("Signup is disabled")
+            throw new PassToClientError("Signup is disabled")
+        }
         // eslint-disable-next-line no-useless-catch
         try {
             await client.connect()

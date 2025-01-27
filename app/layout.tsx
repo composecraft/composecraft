@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import {Toaster} from "react-hot-toast";
-import BetaBanner from "@/components/ui/betaBanner";
 
 import { DM_Sans } from 'next/font/google'
 import CoreBanner from "@/components/ui/coreBanner";
@@ -60,7 +59,6 @@ export default function RootLayout({
           position="top-right"
           reverseOrder={false}
       />
-      <BetaBanner />
       <CoreBanner />
       {children}
       </body>

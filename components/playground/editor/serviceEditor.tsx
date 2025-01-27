@@ -8,7 +8,8 @@ import {
     PortMapping,
     RestartPolicyCondition,
     Service,
-    TimeUnits, Volume
+    TimeUnits, Volume,
+    KeyValue
 } from "@composecraft/docker-compose-lib";
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
@@ -19,6 +20,9 @@ import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Separator} from "@/components/ui/separator";
 import DurationInput from "@/components/playground/editor/durationInput";
 import {addExtraDots} from "@/lib/utils";
+import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger} from "@/components/ui/dialog";
+import LabelEditor from "@/components/playground/editor/labelEditor";
+import {useState} from "react";
 
 export default function ServiceEditor(){
 
@@ -33,9 +37,31 @@ export default function ServiceEditor(){
         throw Error(`${selectedId} service is not found`)
     }
 
+    function labelsToText(labels:KeyValue[]):string{
+        let result = ""
+        labels.forEach(label=>{
+            result = result+`${label.key}=${label.value}\n`
+        })
+        return result
+    }
+
+    function textToLabels(text: string): KeyValue[] {
+        // Split the input text by new lines
+        const lines = text.trim().split('\n');
+
+        // Map each line to a KeyValue object
+        return lines.map(line => {
+            const [key, value] = line.split('=');
+            return new KeyValue(key,value)
+        });
+    }
+
+    const [labelString,setLabelString] = useState(labelsToText(getService().labels||[]))
+
     return (
         <form className="flex flex-col gap-5">
             <p className="text-2xl font-semibold">Service</p>
+
             <Tabs defaultValue="general" className="w-full">
                 <TabsList className="w-full">
                     <TabsTrigger className="w-full" value="general">General</TabsTrigger>
@@ -55,7 +81,8 @@ export default function ServiceEditor(){
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="image">Image</label>
-                            <Input data-umami-event="playground-editor-input-imageName" name="image" value={getService().image?.name || ""}
+                            <Input data-umami-event="playground-editor-input-imageName" name="image"
+                                   value={getService().image?.name || ""}
                                    onChange={(e) => {
                                        setCompose(() => {
                                            const image = getService().image
@@ -70,7 +97,8 @@ export default function ServiceEditor(){
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="tag">Tag</label>
-                            <Input data-umami-event="playground-editor-input-imageTag" defaultValue="latest" name="tag" value={getService().image?.tag}
+                            <Input data-umami-event="playground-editor-input-imageTag" defaultValue="latest" name="tag"
+                                   value={getService().image?.tag}
                                    onChange={(e) => {
                                        setCompose(() => {
                                            const image = getService().image
@@ -138,6 +166,29 @@ export default function ServiceEditor(){
                                }}
                         />
                     </div>
+                    <div>
+                        <Dialog>
+                            <DialogTrigger asChild>
+                                <Button variant="outline" className="w-full">Edit service labels</Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader className="font-bold">Edit Service "{getService().name}" labels</DialogHeader>
+                                <LabelEditor value={labelString} setValue={setLabelString} />
+                                <DialogFooter>
+                                    <DialogClose asChild>
+                                        <Button variant="secondary">Cancel</Button>
+                                    </DialogClose>
+                                    <DialogClose asChild>
+                                    <Button type="button" onClick={()=>{
+                                        setCompose(()=>{
+                                            getService().labels = textToLabels(labelString)
+                                        })
+                                    }}>Save</Button>
+                                    </DialogClose>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                 </TabsContent>
                 <TabsContent value="volume">
                     <div className="flex flex-col gap-2">
@@ -146,7 +197,8 @@ export default function ServiceEditor(){
                             <QuickToolType className=""
                                            message={"Bindings are local folder mounted inside the container"}/>
                         </label>
-                        <Button data-umami-event="playground-editor-btn-addBinding" type="button" className="flex flex-row gap-2" onClick={()=>{
+                        <Button data-umami-event="playground-editor-btn-addBinding" type="button"
+                                className="flex flex-row gap-2" onClick={() => {
                             setCompose(()=>{
                                 getService().bindings.add(new Binding({
                                     source: "./",
@@ -229,29 +281,40 @@ export default function ServiceEditor(){
                                     <div className='flex flex-col w-full'>
                                         <label className="text-sm">Container</label>
                                         {/*@ts-expect-error tkt*/}
-                                        <Input value={port.containerPort} onChange={(e)=>setCompose(()=>getService().ports[index].containerPort =Number(e.target.value))}/>
+                                        <Input value={port.containerPort} onChange={(e) => setCompose(() => getService().ports[index].containerPort = Number(e.target.value))}/>
                                     </div>
-                                    <Button type="button" className="bg-slate-200" variant="secondary" onClick={()=>setCompose(()=>{
-                                        getService().ports?.splice(index,1)
-                                    })}>
-                                        <Eraser />
+                                    <Button type="button" className="bg-slate-200" variant="secondary"
+                                            onClick={() => setCompose(() => {
+                                                getService().ports?.splice(index, 1)
+                                            })}>
+                                        <Eraser/>
                                     </Button>
                                 </div>
                                 <Separator/>
                             </>
                         ))}
-                        <Button data-umami-event="playground-editor-input-addPortExpose" type="button" onClick={() => setCompose(() => {
-                            const servicePorts = getService().ports
-                            if (servicePorts) {
-                                servicePorts.push(new PortMapping({containerPort: 80, hostPort: 80}))
-                            } else {
-                                getService().ports = [
-                                    new PortMapping({containerPort: 80, hostPort: 80})
-                                ]
-                            }
-                        })} className="flex flex-row gap-2">
-                            <EthernetPort height={20} />Add mapping
+                        <Button data-umami-event="playground-editor-input-addPortExpose" type="button"
+                                onClick={() => setCompose(() => {
+                                    const servicePorts = getService().ports
+                                    if (servicePorts) {
+                                        servicePorts.push(new PortMapping({containerPort: 80, hostPort: 80}))
+                                    } else {
+                                        getService().ports = [
+                                            new PortMapping({containerPort: 80, hostPort: 80})
+                                        ]
+                                    }
+                                })} className="flex flex-row gap-2">
+                            <EthernetPort height={20}/>Add mapping
                         </Button>
+                        <Separator/>
+                        <div className="flex flex-col gap-2">
+                            <label htmlFor="network_mode">Network mode</label>
+                            <Input name="network_mode" value={getService().network_mode || ""}
+                                   onChange={(e) => {
+                                       setCompose(() => getService().network_mode = e.target.value)
+                                   }}
+                            />
+                        </div>
                     </div>
                 </TabsContent>
                 <TabsContent className="flex flex-col gap-5 w-full" value="health">

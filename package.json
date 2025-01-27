@@ -1,6 +1,6 @@
 {
   "name": "next-compose-craft",
-  "version": "0.7.11",
+  "version": "1.0.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
@@ -9,7 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
-    "@composecraft/docker-compose-lib": "^1.2.16",
+    "@composecraft/docker-compose-lib": "^1.3.3",
     "@dagrejs/dagre": "^1.1.4",
     "@hookform/resolvers": "^3.9.1",
     "@monaco-editor/react": "^4.6.0",

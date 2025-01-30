@@ -1,4 +1,4 @@
-name: compose craft
+name: compose-craft
 services:
   saas:
     image: composecraft/composecraft:latest

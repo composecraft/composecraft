@@ -356,6 +356,7 @@ return (
         onConnect={onNodesConnect}
         onSelectionChange={handleSelection}
         onEdgesChange={handleSelection}
+        fitView
         //@ts-ignore
         onKeyDown={handleKeyPress}
         minZoom={Number.NEGATIVE_INFINITY}

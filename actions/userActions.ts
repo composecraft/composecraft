@@ -4,7 +4,7 @@ import client from "@/lib/mongodb"
 import {z} from "zod";
 import {zfd} from "zod-form-data";
 import {actionClient, PassToClientError} from "@/lib/safe-action";
-import bcrypt from "bcrypt";
+import bcrypt from "bcryptjs";
 import {registerUserToBrevo, sendRecoverPassdEmail, updateUserList} from "@/lib/brevo";
 import {cookies} from 'next/headers'
 import {redirect} from "next/navigation";

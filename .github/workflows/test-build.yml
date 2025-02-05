@@ -2,6 +2,8 @@ name: Docker Image CI (Test Only)
 
 on:
   push:
+    branches-ignore:
+      - "main"
 
 jobs:
   build-test:

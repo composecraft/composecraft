@@ -31,7 +31,7 @@
     "@xyflow/react": "^12.3.4",
     "@xyflow/system": "^0.0.45",
     "axios": "^1.7.7",
-    "bcrypt": "^5.1.1",
+    "bcryptjs": "^2.4.3",
     "bson": "^6.9.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
@@ -61,6 +61,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^5.0.2",
+    "@types/bcryptjs": "^2.4.6",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^20.17.6",
     "@types/react": "^18.3.12",

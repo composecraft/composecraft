@@ -7,7 +7,7 @@
 
 <img src="./assets/demo-img.png">
 
-## Features :
+## Features : 
 
 - Create docker compose with a GUI
 - Share docker compose diagram in one click with a public link

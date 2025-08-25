@@ -5,6 +5,7 @@ import {Toaster} from "react-hot-toast";
 
 import { DM_Sans } from 'next/font/google'
 import CoreBanner from "@/components/ui/coreBanner";
+import Instrumentation from "@/components/instrumentation";
 
 const dm_sans = DM_Sans({ subsets: ['latin'] })
 
@@ -51,6 +52,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${dm_sans.className} antialiased h-screen`}
       >
+        {!process.env.DISABLE_TELEMETRY && <Instrumentation posthogKey={process.env.NEXT_PUBLIC_POSTHOG_KEY!} />}
       <Toaster
           position="top-right"
           reverseOrder={false}

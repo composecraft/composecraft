@@ -47,6 +47,7 @@
     "next-mdx-remote": "^5.0.0",
     "next-safe-action": "^7.9.9",
     "posthog-js": "^1.260.2",
+    "posthog-node": "^5.7.0",
     "react": "19.1.1",
     "react-dom": "19.1.1",
     "react-hook-form": "^7.53.1",

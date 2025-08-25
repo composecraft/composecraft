@@ -64,7 +64,7 @@ pnpm run dev
 
 ### Telemetry
 
-By default, the app collect basic website telemetry with as self-hosted instance of [umami](https://umami.is).
+By default, the app collect basic website telemetry with posthog.
 But if you want to disable it, you can just set DISABLE_TELEMETRY=true in envs.
 
 

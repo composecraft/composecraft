@@ -3,7 +3,7 @@ import {DataTable} from "@/components/display/dataTable";
 import {columns} from "@/components/display/shareTable/colums";
 import FirstCompose from "@/components/ui/fisrtCompose";
 
-export default async function (){
+export default async function Page (){
 
     const myShares = await getAllMyShares()
 

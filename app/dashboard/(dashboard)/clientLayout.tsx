@@ -5,14 +5,14 @@ import {default as NextImage} from "next/image";
 import logo from "@/assets/logo_mark.jpg";
 import {Button} from "@/components/ui/button";
 import {House, LogOut, Megaphone, Settings, Share} from "lucide-react";
-import {ReactElement} from "react";
+import {ReactNode} from "react";
 import {cn} from "@/lib/utils";
 import {usePathname} from "next/navigation";
 import {Avatar,AvatarFallback, AvatarImage} from "@/components/ui/avatar";
 import {DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger} from "@/components/ui/dropdown-menu";
 import {logout} from "@/actions/userActions";
 
-export default function ClientLayout({children,version}:{children:ReactElement,version:string}) {
+export default function ClientLayout({children,version}:{children:ReactNode,version:string}) {
 
     const pathname = usePathname()
 

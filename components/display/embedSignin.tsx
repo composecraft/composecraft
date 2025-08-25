@@ -1,3 +1,5 @@
+"use client"
+
 import {Label} from "@/components/ui/label";
 import {Input} from "@/components/ui/input";
 import QuickToolType from "@/components/ui/quickToolType";
@@ -15,18 +17,21 @@ import {useComposeStore} from "@/store/compose";
 import {Translator} from "@composecraft/docker-compose-lib";
 import usePositionMap from "@/store/metadataMap";
 import {extractMetadata} from "@/lib/metadata";
+import { useRouter } from 'next/navigation'
 
 export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlayGround?:boolean}){
 
     const {compose} = useComposeStore()
     const {positionMap} = usePositionMap()
+    const router = useRouter()
 
     const {execute} = useAction(registerUser,{
-        //onSuccess:()=>{router.push("/dashboard")},
+        onSuccess:()=>{router.push("/dashboard")},
         onError:((e)=>{
             if(e?.error?.serverError){
                 toast.error(e?.error?.serverError.toString())
             }else{
+                console.log(e)
                 toast.error("this email is probably already used")
             }
         })
@@ -35,6 +40,7 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
     const [companyType, setCompanyType] = useState("")
 
     const handleSubmit = (formData:FormData) => {
+        debugger
         if(redirectToPlayGround){
             const t = new Translator(compose)
             formData.append("data", JSON.stringify({

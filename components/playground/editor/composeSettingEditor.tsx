@@ -11,7 +11,6 @@ import QuickToolType from "@/components/ui/quickToolType";
 import toast from "react-hot-toast";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
 import EmbedSignin from "@/components/display/embedSignin";
-import {DialogBody} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import useDisableStateStore from "@/store/disabled";
 export default function ComposeSettingEditor() {
 
@@ -116,9 +115,9 @@ export default function ComposeSettingEditor() {
                             </Button>
                         </DialogTrigger>
                         <DialogContent>
-                            <DialogBody>
+                            <div>
                                 <EmbedSignin redirectToPlayGround={true} />
-                            </DialogBody>
+                            </div>
                         </DialogContent>
                     </Dialog>
                     :

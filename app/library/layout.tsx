@@ -1,10 +1,9 @@
 "use server"
 
-import {ReactElement} from "react";
+import {ReactNode} from "react";
 import Nav from "@/components/ui/nav";
 
-export default async function Layout({children}:{children:ReactElement}){
-
+export default async function Layout({children}:{children:ReactNode}){
 
     return(
         <section>

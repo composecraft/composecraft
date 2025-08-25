@@ -8,7 +8,7 @@ import {Typewriter} from "react-simple-typewriter";
 import Image from "next/image";
 import gif from "@/assets/gif-min.gif";
 
-export default function Debug(): ReactElement {
+export default function Debug(): ReactElement<any> {
     "use client"
 
     return (

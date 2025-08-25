@@ -12,7 +12,7 @@ import {Service, Image, Network, Volume} from "@composecraft/docker-compose-lib"
 import '@xyflow/react/dist/style.css'
 import {networkEdgeStyle, volumeEdgeStyle} from "@/components/playground/node/utils";
 
-export default function Demo():ReactElement{
+export default function Demo():ReactElement<any>{
 
     const webserver = new Service({name: "webserver",image: new Image({name:"flask"})})
     webserver.id = "webserver"

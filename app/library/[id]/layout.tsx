@@ -1,11 +1,9 @@
 "use server"
 
-import {ReactElement} from "react";
+import {ReactNode} from "react";
 import Footer from "@/components/display/footer";
 
-export default async function Layout({children}:{children:ReactElement}){
-
-
+export default async function Layout({children}:{children:ReactNode}){
     return(
         <div>
             {children}

@@ -15,7 +15,7 @@ export type FeatureType = {
 }
 
 export const getAllFeatures = async () => {
-    const rawToken = cookies().get("token")?.value;
+    const rawToken = (await cookies()).get("token")?.value;
     const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
     const { payload } = await jwtVerify(rawToken || "", secretKey);
     const userId = new ObjectId(payload.userId as string);
@@ -47,7 +47,7 @@ export const getAllFeatures = async () => {
 };
 
 export const toggleFeatureLike = async (featureId:string) => {
-    const rawToken = cookies().get("token")?.value;
+    const rawToken = (await cookies()).get("token")?.value;
     const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
     const { payload } = await jwtVerify(rawToken || "", secretKey);
     const userId = new ObjectId(payload.userId as string);

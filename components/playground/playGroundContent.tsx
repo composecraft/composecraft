@@ -20,7 +20,6 @@ import {
     DialogTitle,
     DialogTrigger
 } from "@/components/ui/dialog";
-import {DialogBody} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import YamlEditor from "@/components/playground/yamlEditor";
 import EditMenu from "@/components/playground/editMenu";
 import ShareButton from "@/components/playground/shareButton";
@@ -38,7 +37,11 @@ interface PlayGroundContentOptions {
 export default function PlaygroundContent(opts:PlayGroundContentOptions) {
     const { inviteMode = false } = opts;
     const { setState } = useDisableStateStore.getState();
-    setState(inviteMode)
+
+    useEffect(() => {
+        setState(inviteMode);
+    }, [setState]);
+
     const replaceComposeOptions = {
         disableSave: inviteMode
     }
@@ -120,9 +123,9 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                                 </button>
                             </DialogTrigger>
                             <DialogContent>
-                                <DialogBody>
+                                <div>
                                     <EmbedSignin redirectToPlayGround={true}/>
-                                </DialogBody>
+                                </div>
                             </DialogContent>
                         </Dialog>
                     </div>
@@ -170,9 +173,9 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                             <DialogTitle>
                                 docker-compose.yaml
                             </DialogTitle>
-                            <DialogBody>
+                            <div>
                                 <YamlEditor/>
-                            </DialogBody>
+                            </div>
                         </DialogContent>
                     </Dialog>
                     <Button data-umami-event="playground-editor-btn-autoLayout" className="bg-slate-200 flex gap-2"

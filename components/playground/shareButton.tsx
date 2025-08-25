@@ -7,7 +7,6 @@ import {useState} from "react";
 import {shareCompose} from "@/actions/composeActions";
 import {useComposeStore} from "@/store/compose";
 import {Dialog, DialogContent, DialogTrigger} from "@/components/ui/dialog";
-import {DialogBody} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import EmbedSignin from "@/components/display/embedSignin";
 
 export default function ShareButton({inviteMode = false}: { inviteMode?: boolean }) {
@@ -39,9 +38,9 @@ export default function ShareButton({inviteMode = false}: { inviteMode?: boolean
                 </Button>
             </DialogTrigger>
             <DialogContent>
-                <DialogBody>
+                <div>
                     <EmbedSignin redirectToPlayGround={true} />
-                </DialogBody>
+                </div>
             </DialogContent>
         </Dialog> :
         <Popover>

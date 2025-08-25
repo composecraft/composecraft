@@ -13,11 +13,12 @@ function flat_tags(input:ItemList):string[]{
 }
 
 // eslint-disable-next-line react-refresh/only-export-components
-export async function generateMetadata({
-                                           params,
-                                       }: {
-    params: { id: string }
-}): Promise<Metadata> {
+export async function generateMetadata(
+    props: {
+        params: Promise<{ id: string }>
+    }
+): Promise<Metadata> {
+    const params = await props.params;
     const composeBook = await fetchComposeBookById(params.id) as ComposeBookType
 
     return {

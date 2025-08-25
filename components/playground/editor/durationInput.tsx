@@ -16,7 +16,7 @@ export default function DurationInput(options:DurationArgs){
         if(options.onValueChange){
             options.onValueChange(new Delay(time,unit))
         }
-    }, [time,unit]);
+    }, [time,unit,options]);
 
     return(
         <div className="flex flex-row w-full gap-1">

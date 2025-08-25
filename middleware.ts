@@ -22,7 +22,7 @@ export async function middleware(req: NextRequest) {
     }
     // Apply checkAuth to routes under /dashboard
     if (req.nextUrl.pathname.includes("/dashboard")) {
-        const rawToken = cookies().get("token")?.value;
+        const rawToken = (await cookies()).get("token")?.value;
 
         try {
             if (!rawToken) {
@@ -44,7 +44,7 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/", req.url));
         }
     }else if(req.nextUrl.pathname.includes("/login") && !req.nextUrl.pathname.includes("/cli")){
-        const rawToken = cookies().get("token")?.value;
+        const rawToken = (await cookies()).get("token")?.value;
 
         try {
             if(rawToken){
@@ -57,7 +57,7 @@ export async function middleware(req: NextRequest) {
             return NextResponse.redirect(new URL("/", req.url));
         }
     }else if(req.nextUrl.pathname.includes("/tryIt")){
-        const rawToken = cookies().get("token")?.value;
+        const rawToken = (await cookies()).get("token")?.value;
 
         try {
             if(rawToken){
@@ -71,7 +71,7 @@ export async function middleware(req: NextRequest) {
         }
     }
     else if(req.nextUrl.pathname.includes("/signin")){
-        const rawToken = cookies().get("token")?.value;
+        const rawToken = (await cookies()).get("token")?.value;
 
         try {
             if(rawToken){

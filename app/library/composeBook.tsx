@@ -43,8 +43,8 @@ export default function ComposeBook(item:ComposeBookType){
                              src={`https://directus.composecraft.com/assets/${item.logo}`}/>
                     </div>
                     <div className='flex flex-row gap-2'>
-                        {item.tags && flat_tags(item.tags).splice(0, 3).map((tag) => (
-                            <div className="text-sm text-violet-500 p-1 px-2 bg-slate-100 rounded">
+                        {item.tags && flat_tags(item.tags).splice(0, 3).map((tag,i) => (
+                            <div key={i} className="text-sm text-violet-500 p-1 px-2 bg-slate-100 rounded">
                                 {tag}
                             </div>
                         ))}

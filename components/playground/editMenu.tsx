@@ -8,7 +8,7 @@ import EnvEditor from "@/components/playground/editor/envEditor";
 import ComposeSettingEditor from "@/components/playground/editor/composeSettingEditor";
 
 
-export default function EditMenu():ReactElement{
+export default function EditMenu():ReactElement<any>{
     const {selectedId} = useSelectionStore();
 
     switch (selectedId.substring(0,3)){

@@ -51,10 +51,6 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} ${dm_sans.className} antialiased h-screen`}
       >
-      {(!process.env.DISABLE_TELEMETRY) &&
-          <script defer src="https://analytics.composecraft.com/script.js"
-                  data-website-id="cf5719ce-ce94-4ad1-9573-76d2b7e8e62a"></script>
-      }
       <Toaster
           position="top-right"
           reverseOrder={false}

@@ -38,7 +38,7 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
             .sign(new TextEncoder().encode(secretKey)); // Sign the JWT with the secret key
 
         // Set the JWT token in an HTTP-only cookie
-        cookies().set({
+        (await cookies()).set({
             name: "token",
             value: token,
             httpOnly: true,
@@ -59,7 +59,7 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
             .sign(new TextEncoder().encode(secretKey)); // Sign the JWT with the secret key
 
         // Set the JWT token in an HTTP-only cookie
-        cookies().set({
+        (await cookies()).set({
             name: "token",
             value: token,
             httpOnly: true,
@@ -97,7 +97,7 @@ export const registerUser = actionClient
                 const base64UrlPhrase = base64UrlDecoder.decode(byteArrayPhrase);
                 redirect("/dashboard/playground?data="+base64UrlPhrase)
             }
-            redirect("/dashboard")
+            return true
         } catch (e) {
             throw e;
         }
@@ -174,8 +174,8 @@ export const registerComposeWithoutMetadata = async (compose: object,userId:Obje
 export const getAllMyComposeOrderByEditDate = async () => {
     const payload = await ensureAuth()
 
-    await client.connect();
-    const db = client.db("compose_craft");
+    const cli = await client.connect();
+    const db = cli.db("compose_craft");
     const collection = db.collection("composes");
 
     // Convert user ID from JWT payload to ObjectId
@@ -242,7 +242,7 @@ export const loginUser = actionClient
                 .sign(new TextEncoder().encode(secretKey));
 
             // Set the JWT token in an HTTP-only cookie
-            cookies().set({
+            (await cookies()).set({
                 name: "token",
                 expires: new Date(Date.now() + 29 * 24 * 60 * 60 * 1000),
                 value: token,
@@ -393,7 +393,7 @@ export const deleteUser = async () => {
 
             // Delete the user from the database
             await userCollection.deleteOne({ _id: userId });
-            cookies().delete("token")
+            (await cookies()).delete("token")
             console.log("account " + userId.toString() + " deleted")
             redirect("https://form.composecraft.com/s/cm40i9zod000hwl0z6005uvwp")
         } catch (e) {
@@ -405,7 +405,7 @@ export const logout = async () => {
     // eslint-disable-next-line no-useless-catch
     try {
         await client.connect();
-        cookies().delete("token")
+        (await cookies()).delete("token")
         redirect("/")
     } catch (e) {
         throw e;

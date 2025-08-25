@@ -5,7 +5,6 @@ import {useState} from "react";
 import {Separator} from "@/components/ui/separator";
 import {Button} from "@/components/ui/button";
 import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger} from "@/components/ui/dialog";
-import {DialogBody} from "next/dist/client/components/react-dev-overlay/internal/components/Dialog";
 import {deleteUser} from "@/actions/userActions";
 import toast from "react-hot-toast";
 
@@ -48,11 +47,11 @@ export default function Settings({init}:{init?:settingsInitData}){
                     </DialogTrigger>
                     <DialogContent>
                         <DialogHeader className="text-lg font-bold">Do you really want to delete your account ?</DialogHeader>
-                        <DialogBody>
+                        <div>
                             <p>This will destroy the account and all data we have about you, <strong>You will loose all your data</strong></p>
                             <p className="my-3">To delete your account, please type bellow : "delete my account and loose my data"</p>
                             <Input placeholder="confirm" value={confirm} onChange={e=>setConfirm(e.target.value)} />
-                        </DialogBody>
+                        </div>
                         <DialogFooter>
                             <DialogClose asChild>
                                 <Button>

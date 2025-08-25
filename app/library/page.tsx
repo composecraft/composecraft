@@ -23,9 +23,9 @@ export default async function Page({
                 <SearchInput placeholder="Search..." className="mx-10 md:my-10 text-xl rounded-full md:px-5 md:py-5" />
             </div>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 my-10 mx-5 md:mx-20">
-                <Suspense key={(await searchParams).search} fallback={Array.from({ length: 9 }).map(()=>
-                        <Skeleton className="w-full h-48" />
-                    )}>
+                <Suspense key={(await searchParams).search} fallback={Array.from({ length: 9 }).map((_, index) =>
+                    <Skeleton key={index} className="w-full h-48" />
+                )}>
                     <SearchResult res={res} />
                 </Suspense>
             </div>

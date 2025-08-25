@@ -40,7 +40,6 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
     const [companyType, setCompanyType] = useState("")
 
     const handleSubmit = (formData:FormData) => {
-        debugger
         if(redirectToPlayGround){
             const t = new Translator(compose)
             formData.append("data", JSON.stringify({

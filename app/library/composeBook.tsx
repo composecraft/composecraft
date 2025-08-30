@@ -1,6 +1,7 @@
 import Link from "next/link";
 import {Card, CardContent} from "@/components/ui/card";
 import {addExtraDots} from "@/lib/utils";
+import Image from "next/image"
 
 type Item = {
     name: string;
@@ -39,7 +40,7 @@ export default function ComposeBook(item:ComposeBookType){
                             <p className="text-xl font-bold">{item.title}</p>
                             <p className="text-sm text-slate-600">{item?.description && addExtraDots(item?.description, 200)}</p>
                         </div>
-                        <img alt="logo" className="w-10 h-10 rounded object-cover"
+                        <Image alt="logo" width={10} height={10} className="w-10 h-10 rounded object-cover"
                              src={`https://directus.composecraft.com/assets/${item.logo}`}/>
                     </div>
                     <div className='flex flex-row gap-2'>

@@ -6,6 +6,9 @@ const json = require("./package.json");
 
 const nextConfig = {
         output: 'standalone',
+        images: {
+                remotePatterns: [new URL('https://directus.composecraft.com/assets/**')],
+        },
         publicRuntimeConfig: {
                 version: json.version,
         },

@@ -38,7 +38,7 @@ const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
     const {setSelectedString} = useSelectionStore()
     const [isDraggable, setIsDraggable] = useState(true)
 
-    const updatePosition = (key: string, newPosition: XYPosition) => {
+    const updatePosition = useCallback((key: string, newPosition: XYPosition) => {
         const currentEntry = positionMap.get(key);
         if (currentEntry?.position === newPosition) {
             return
@@ -49,7 +49,7 @@ const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
             dimension: currentEntry?.dimension
         });
         setPositionMap(updatedMap);
-    };
+    }, [positionMap, setPositionMap]);
 
     useEffect(() => {
         compose.services.forEach((service) => {
@@ -60,7 +60,7 @@ const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
                     })
             }
         })
-    }, [compose]);
+    }, [compose, positionMap]);
 
     const nodeTypes = useMemo(() => (
         {
@@ -158,7 +158,7 @@ const onNodesChanges = useCallback(
             }
         })
     },
-    [positionMap, isDraggable]
+    [updatePosition, isDraggable]
 )
 
 // eslint-disable-next-line

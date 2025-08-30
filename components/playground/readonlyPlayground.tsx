@@ -26,7 +26,6 @@ export default function ReadOnlyPlayGround(opt:options){
     const [positionMap, setPositionMap] = useState<Map<string,NodeData>>(new Map())
 
     useEffect(() => {
-        console.log(opt)
         if(opt.compose){
             const c = Translator.fromDict(opt.compose)
             setCompose(c)
@@ -35,7 +34,7 @@ export default function ReadOnlyPlayGround(opt:options){
                 setPositionMap(recreatePositionMap(opt.positionMap.positionMap))
             }
         }
-    }, []);
+    }, [opt]);
 
     useEffect(() => {
         compose.services.forEach((service) => {
@@ -46,7 +45,7 @@ export default function ReadOnlyPlayGround(opt:options){
                     })
             }
         })
-    }, [compose]);
+    }, [compose,positionMap]);
 
     const nodeTypes = useMemo(() => (
         {
@@ -58,7 +57,7 @@ export default function ReadOnlyPlayGround(opt:options){
         }
     ), [])
 
-    const updatePosition = (key: string, newPosition: XYPosition) => {
+    const updatePosition = useCallback((key: string, newPosition: XYPosition) => {
         const currentEntry = positionMap.get(key);
         if (currentEntry?.position === newPosition) {
             return
@@ -69,7 +68,7 @@ export default function ReadOnlyPlayGround(opt:options){
             dimension: currentEntry?.dimension
         });
         setPositionMap(updatedMap);
-    };
+    }, [positionMap]);
 
     const onNodesChanges = useCallback(
         // eslint-disable-next-line
@@ -83,7 +82,7 @@ export default function ReadOnlyPlayGround(opt:options){
                 }
             })
         },
-        [positionMap]
+        [updatePosition]
     )
 
     function composeToNodes(compose: Compose): Node[] {

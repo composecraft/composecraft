@@ -2,7 +2,7 @@ import {useSearchParams} from "next/navigation";
 import useComposeIdStore from "@/store/composeId";
 import {useComposeStore} from "@/store/compose";
 import usePositionMap from "@/store/metadataMap";
-import {useEffect, useRef, useState} from "react";
+import {useEffect, useMemo, useRef, useState} from "react";
 import Playground, {PlaygroundHandle} from "@/components/playground/playground";
 import toast from "react-hot-toast";
 import {getComposeById} from "@/actions/userActions";
@@ -40,11 +40,11 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
 
     useEffect(() => {
         setState(inviteMode);
-    }, [setState]);
+    }, [setState, inviteMode]);
 
-    const replaceComposeOptions = {
+    const replaceComposeOptions = useMemo(() => ({
         disableSave: inviteMode
-    }
+    }), [inviteMode]);
     const searchParams = useSearchParams()
     const {setId} = useComposeIdStore()
     const {compose,replaceCompose} = useComposeStore();
@@ -95,7 +95,7 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
             setPositionMap(recreatePositionMap(parsedObj.metadata.positionMap))
             replaceCompose(savedCompose,replaceComposeOptions)
         }
-    }, [inviteMode]);
+    }, [inviteMode, replaceCompose, replaceComposeOptions, searchParams, setId, setPositionMap]);
 
     return (
         <section className="w-full flex flex-col h-full max-h-full">

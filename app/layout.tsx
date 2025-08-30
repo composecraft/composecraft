@@ -21,6 +21,7 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: "Compose Craft",
   description: "Compose craft is the unique docker compose GUI builder and viewer",

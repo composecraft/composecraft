@@ -13,7 +13,7 @@ export default function Instrumentation({posthogKey}:{posthogKey:string}){
         capture_exceptions: true,
         debug: process.env.NODE_ENV === "development",
     });
-    },[])
+    },[posthogKey])
 
     return <></>
 }

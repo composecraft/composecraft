@@ -30,7 +30,7 @@ export default async function Page() {
                             No credit card required.
                         </h2>
                         <div className="pointer-events-auto">
-                            <Button data-umami-event="hero-get-started" asChild className="text-xl px-5 py-6 bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF]">
+                            <Button asChild className="text-xl px-5 py-6 bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF]">
                                 <Link href={"/tryIt/playground"}>
                                     Start now for free
                                 </Link>

@@ -41,7 +41,7 @@ export default function ClientLayout({children,version}:{children:ReactNode,vers
             </nav>
             <div className='flex flex-row flex-grow'>
                 <div className='flex flex-col w-1/6 mt-10 flex-grow'>
-                    <Link data-umami-event="create-compose-left" href={"/dashboard/playground"}>
+                    <Link href={"/dashboard/playground"}>
                         <Button className='w-fit'>
                             New Compose
                         </Button>
@@ -53,17 +53,17 @@ export default function ClientLayout({children,version}:{children:ReactNode,vers
                             })} href={"/dashboard"}>
                                 <House/> Home
                             </Link>
-                            <Link data-umami-event="shares-link-left" className={cn("flex flex-row gap-5 text-slate-400",{
+                            <Link className={cn("flex flex-row gap-5 text-slate-400",{
                                 "text-black" : pathname.endsWith("shares")
                             })} href={"/dashboard/shares"}>
                                 <Share /> My shares
                             </Link>
-                            <Link data-umami-event="upcoming-features" className={cn("flex flex-row gap-5 text-slate-400",{
+                            <Link className={cn("flex flex-row gap-5 text-slate-400",{
                                 "text-black" : pathname.endsWith("upcomingFeatures")
                             })} href={"/dashboard/upcomingFeatures"}>
                                 <Megaphone /> Umpcoming features
                             </Link>
-                            <Link data-umami-event="settings" className={cn("flex flex-row gap-5 text-slate-400",{
+                            <Link className={cn("flex flex-row gap-5 text-slate-400",{
                                 "text-black" : pathname.endsWith("settings")
                             })} href={"/dashboard/settings"}>
                                 <Settings/> Settings

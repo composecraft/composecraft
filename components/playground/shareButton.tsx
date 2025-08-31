@@ -31,7 +31,7 @@ export default function ShareButton({inviteMode = false}: { inviteMode?: boolean
     return inviteMode ?
         <Dialog>
             <DialogTrigger asChild>
-                <Button data-umami-event="playground-tryIt-btn-share-createAccount" disabled={inviteMode ? false: !id}
+                <Button disabled={inviteMode ? false: !id}
                         variant="secondary" className="bg-slate-200 flex gap-2">
                     <ExternalLink height={20}/>
                     Share
@@ -45,7 +45,7 @@ export default function ShareButton({inviteMode = false}: { inviteMode?: boolean
         </Dialog> :
         <Popover>
             <PopoverTrigger asChild>
-                <Button data-umami-event="playground-editor-btn-share" disabled={inviteMode ? false: !id}
+                <Button disabled={inviteMode ? false: !id}
                         onClick={() => handleShare(id || "")} variant="secondary" className="bg-slate-200 flex gap-2">
                     <ExternalLink height={20}/>
                     Share
@@ -58,7 +58,7 @@ export default function ShareButton({inviteMode = false}: { inviteMode?: boolean
                         <>
                                 <span className="flex flex col justify-between rounded border-2 p-1">
                                     <input className="outline-0" value={link}/>
-                                    <button data-umami-event="playground-editor-btn-shareClipBoard" onClick={() => {
+                                    <button onClick={() => {
                                         navigator.clipboard.writeText(link);
                                         toast("link copied")
                                     }} type="button"

@@ -5,7 +5,7 @@ import {Plus} from "lucide-react";
 export default function FirstCompose(){
     return (
         <div className="flex flex-col justify-center items-center gap-3 py-10">
-            <button data-umami-event="create-first-compose" onClick={() => {
+            <button onClick={() => {
                 window.location.href = "/dashboard/playground"
             }} className="w-40 h-40 flex items-center justify-center">
                 <Plus

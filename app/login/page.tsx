@@ -36,15 +36,15 @@ export default function Dashboard() {
                             <Label htmlFor="password">password</Label>
                             <Input required name="password" type="password"/>
                         </div>
-                        <Button data-umami-event="login-btn" type="submit">login</Button>
+                        <Button type="submit">login</Button>
                         <Separator />
                             <GithubAuth />
                         <Separator />
                         <div className="flex flex-row gap-5">
-                            <Button data-umami-event="create-account-link" asChild variant="default" className="w-1/2">
+                            <Button asChild variant="default" className="w-1/2">
                                 <Link href="/signin">Create an account</Link>
                             </Button>
-                            <Button data-umami-event="password-recover" variant="outline" className="w-1/2">
+                            <Button variant="outline" className="w-1/2">
                                 <Link href="/forgotPassword">Password recover</Link>
                             </Button>
                         </div>

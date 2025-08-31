@@ -81,7 +81,7 @@ export default function ServiceEditor(){
                     <div className="flex flex-row justify-between">
                         <div className="flex flex-col gap-2">
                             <label htmlFor="image">Image</label>
-                            <Input data-umami-event="playground-editor-input-imageName" name="image"
+                            <Input name="image"
                                    value={getService().image?.name || ""}
                                    onChange={(e) => {
                                        setCompose(() => {
@@ -97,7 +97,7 @@ export default function ServiceEditor(){
                         </div>
                         <div className="flex flex-col gap-2">
                             <label htmlFor="tag">Tag</label>
-                            <Input data-umami-event="playground-editor-input-imageTag" defaultValue="latest" name="tag"
+                            <Input defaultValue="latest" name="tag"
                                    value={getService().image?.tag}
                                    onChange={(e) => {
                                        setCompose(() => {
@@ -197,7 +197,7 @@ export default function ServiceEditor(){
                             <QuickToolType className=""
                                            message={"Bindings are local folder mounted inside the container"}/>
                         </label>
-                        <Button data-umami-event="playground-editor-btn-addBinding" type="button"
+                        <Button type="button"
                                 className="flex flex-row gap-2" onClick={() => {
                             setCompose(()=>{
                                 getService().bindings.add(new Binding({
@@ -293,7 +293,7 @@ export default function ServiceEditor(){
                                 <Separator/>
                             </>
                         ))}
-                        <Button data-umami-event="playground-editor-input-addPortExpose" type="button"
+                        <Button type="button"
                                 onClick={() => setCompose(() => {
                                     const servicePorts = getService().ports
                                     if (servicePorts) {

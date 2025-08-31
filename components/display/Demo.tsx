@@ -108,7 +108,7 @@ export default function Demo():ReactElement<any>{
     return(
         <ReactFlowProvider>
             <ReactFlow
-                data-umami-event="demo-interact"
+               
                 nodeTypes={nodeTypes}
                 nodes={nodes}
                 onNodesChange={onNodesChange}

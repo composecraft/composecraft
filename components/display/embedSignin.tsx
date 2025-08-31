@@ -90,14 +90,14 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
                     Accept <Link className="underline" href="/cgu.pdf">terms and conditions</Link>
                 </label>
             </div>
-            <Button className="bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF]" data-umami-event="create-account-btn-submit" type="submit">Create an account</Button>
+            <Button className="bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF]" type="submit">Create an account</Button>
             <Separator/>
             <div className="flex flex-row w-full">
                 <GithubAuth/>
             </div>
             <Separator/>
             <div className="flex flex-row gap-5">
-                <Button data-umami-event="login-link" asChild variant="default" className="w-1/2">
+                <Button asChild variant="default" className="w-1/2">
                     <Link href="/login">Login</Link>
                 </Button>
                 <Button variant="outline" className="w-1/2">

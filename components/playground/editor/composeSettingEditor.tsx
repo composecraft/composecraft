@@ -60,7 +60,7 @@ export default function ComposeSettingEditor() {
                 <div className="flex flex-col gap-2">
                     <label className='flex flex-row justify-between items-end' htmlFor="target">Name <QuickToolType
                         className="" message={"Docker compose global name"}/></label>
-                    <Input data-umami-event="playground-editor-input-name" name="target" value={compose.name}
+                    <Input name="target" value={compose.name}
                            onChange={(e) => {
                                setCompose((currentCompose) => {
                                    currentCompose.name = e.target.value
@@ -78,7 +78,7 @@ export default function ComposeSettingEditor() {
                             c.version = Number(value) as ComposeVersion
                         }
                     })}}>
-                        <SelectTrigger data-umami-event="playground-editor-btn-version">
+                        <SelectTrigger>
                             {compose.version || "Unspecified"}
                         </SelectTrigger>
                         <SelectContent>
@@ -94,23 +94,23 @@ export default function ComposeSettingEditor() {
                     </Select>
                 </div>
                 <div className="grid gap-1 grid-cols-2">
-                    <Button data-umami-event="playground-editor-btn-addService" type='button' className="flex flex-row gap-2" onClick={ser}>
+                    <Button type='button' className="flex flex-row gap-2" onClick={ser}>
                         <Container width={20}/> Add service
                     </Button>
-                    <Button data-umami-event="playground-editor-btn-addNetwork" type='button' className="flex flex-row gap-2" onClick={net}>
+                    <Button type='button' className="flex flex-row gap-2" onClick={net}>
                         <NetworkIcon width={20}/>Add network
                     </Button>
-                    <Button data-umami-event="playground-editor-btn-addVolume" type='button' className="flex flex-row gap-2" onClick={vol}>
+                    <Button type='button' className="flex flex-row gap-2" onClick={vol}>
                         <Folder width={20}/> Add volume
                     </Button>
-                    <Button data-umami-event="playground-editor-btn-addEnvironment" type='button' className="flex flex-row gap-2" onClick={env}>
+                    <Button type='button' className="flex flex-row gap-2" onClick={env}>
                         <Key width={20}/> Add Environment
                     </Button>
                 </div>
                 {disabled ?
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button data-umami-event="playground-tryIt-save-createAccount" type="button" className="col-span-2">
+                            <Button type="button" className="col-span-2">
                                 <Save width={20} /> Save
                             </Button>
                         </DialogTrigger>
@@ -121,7 +121,7 @@ export default function ComposeSettingEditor() {
                         </DialogContent>
                     </Dialog>
                     :
-                    <Button data-umami-event="playground-editor-btn-save" type="button" onClick={()=>{handleSave()}} className="col-span-2">
+                    <Button type="button" onClick={()=>{handleSave()}} className="col-span-2">
                         <Save width={20} /> Save
                     </Button>
                 }

@@ -115,7 +115,7 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                         <Dialog>
                             <DialogTrigger asChild>
                                 <button
-                                    data-umami-event="playground-tryIt-createAccount"
+                                   
                                     className="relative inline-flex items-center justify-center gap-2 px-8 py-2 font-medium transition-all duration-200 ease-in-out rounded-lg bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF] text-white hover:opacity-90 hover:px-10 focus:outline-none focus:ring-2 focus:ring-[#1A96F8]/50 focus:ring-offset-2 shadow-lg"
                                 >
                                     <Sparkles className="w-5 h-5"/>
@@ -131,7 +131,7 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                     </div>
                 }
                 <div className="flex max-h-full flex-row gap-3 ml-auto">
-                    <Button data-umami-event="playground-editor-btn-importFile" onClick={async () => {
+                    <Button onClick={async () => {
                         const input = document.createElement('input');
                         input.type = 'file';
                         input.accept = '.yaml,.yml';
@@ -163,7 +163,7 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                     </Button>
                     <Dialog>
                         <DialogTrigger asChild>
-                            <Button data-umami-event="playground-editor-btn-viewCode" variant="secondary"
+                            <Button variant="secondary"
                                     className="bg-slate-200 flex gap-2">
                                 <Code height={20}/>
                                 View Code
@@ -178,12 +178,12 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                             </div>
                         </DialogContent>
                     </Dialog>
-                    <Button data-umami-event="playground-editor-btn-autoLayout" className="bg-slate-200 flex gap-2"
+                    <Button className="bg-slate-200 flex gap-2"
                             variant="secondary" onClick={() => playgroundRef.current?.onLayout("TB")}>
                         Auto layout
                     </Button>
                     <ShareButton inviteMode={inviteMode}/>
-                    <Button data-umami-event="playground-editor-btn-..." variant="secondary" className="bg-slate-200">
+                    <Button variant="secondary" className="bg-slate-200">
                         ...
                     </Button>
                 </div>
@@ -197,7 +197,7 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                         <EditMenu/>
                     </div>
                     <div className="flex-col flex gap-2">
-                    <Button data-umami-event="playground-editor-btn-downloadCompose" type="button" onClick={() => {
+                    <Button type="button" onClick={() => {
                             const translator = new Translator(compose)
                             const result = YAML.stringify(translator.toDict())
                             const blob = new Blob([result], { type: 'text/yaml' });
@@ -213,7 +213,7 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                             <FileDown height={20} />
                             Download compose
                         </Button>
-                        <Button data-umami-event="playground-editor-btn-library" onClick={()=>toast(
+                        <Button onClick={()=>toast(
                             "This feature is not already released",{
                                 icon: "⚠️"
                             }

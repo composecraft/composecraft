@@ -15,7 +15,7 @@ export default function GithubAuth({cli=false}:{cli?:boolean}){
         }
     }
 
-    return <Button data-umami-event="github-auth" type="button" className="flex flex-row gap-2 w-full" onClick={()=>handleConnect()}>
+    return <Button type="button" className="flex flex-row gap-2 w-full" onClick={()=>handleConnect()}>
         <Image height={22} src={ghLogo} alt={"github logo"} />
         <p>github</p>
     </Button>

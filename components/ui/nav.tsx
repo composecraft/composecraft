@@ -60,18 +60,18 @@ export default function Nav(){
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
-                            <Link data-umami-event="library-link" href={"https://composecraft.com/library"}><p className="hidden lg:flex">Docker compose library</p>
+                            <Link href={"https://composecraft.com/library"}><p className="hidden lg:flex">Docker compose library</p>
                                 <p className="lg:hidden">Library</p></Link>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
-                            <Link data-umami-event="docs-link" href={"https://composecraft.com/docs"}>Docs</Link>
+                            <Link href={"https://composecraft.com/docs"}>Docs</Link>
                         </NavigationMenuLink>
                     </NavigationMenuItem>
                     <NavigationMenuItem>
                         <NavigationMenuLink asChild>
-                            <Link className="flex flex-row gap-1 justify-center items-center" data-umami-event="github-link" href={"https://github.com/composecraft/composecraft"}>
+                            <Link className="flex flex-row gap-1 justify-center items-center" href={"https://github.com/composecraft/composecraft"}>
                                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"
                                      fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"
                                      strokeLinejoin="round" className="lucide lucide-github">
@@ -86,10 +86,10 @@ export default function Nav(){
                 </NavigationMenuList>
             </NavigationMenu>
             <span className="hidden md:flex flex-row gap-5">
-                        <Button data-umami-event="nav-get-started" asChild>
+                        <Button asChild>
                             <Link href={"/tryIt/playground"}>Get started</Link>
                         </Button>
-                        <Button data-umami-event="nav-login" asChild variant="outline"
+                        <Button asChild variant="outline"
                                 className="border-2 border-slate-500">
                             <Link href={"/login"}>Log in</Link>
                         </Button>

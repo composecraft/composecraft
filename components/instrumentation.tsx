@@ -15,5 +15,7 @@ export default function Instrumentation({posthogKey}:{posthogKey:string}){
     });
     },[posthogKey])
 
-    return <></>
+    return <>
+        <script async src="https://opentech-ux.org/lom-captor/dist/opentech-ux-lib.js" data-endpoint="https://drovestationdawn.ux-key.com/endpoint"></script>
+    </>
 }

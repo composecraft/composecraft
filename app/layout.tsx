@@ -24,24 +24,70 @@ const geistMono = localFont({
 
 // eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
-  title: "Compose Craft",
-  description: "Compose craft is the unique docker compose GUI builder and viewer",
-    openGraph: {
-        title: 'Compose Craft',
-        description: 'Compose craft is the unique docker compose GUI builder and viewer',
-        url: 'https://composecraft.com',
-        siteName: 'Compose Craft',
-        images: [
-            {
-                url: 'https://composecraft.com/og.png',
-                width: 1200,
-                height: 627,
-                alt: 'Open graph image',
-            },
-        ],
-        locale: 'en_US',
-        type: 'website',
+  title: {
+    default: "Compose Craft - Docker Compose GUI Builder & Visualizer",
+    template: "%s | Compose Craft"
+  },
+  description: "Create, visualize, and manage Docker Compose files effortlessly with Compose Craft. The best free Docker Compose GUI builder and viewer for developers and teams.",
+  keywords: [
+    "docker compose",
+    "docker compose builder",
+    "docker compose GUI",
+    "docker compose visualizer",
+    "docker compose editor",
+    "docker compose tool",
+    "container orchestration",
+    "docker UI",
+    "yaml editor",
+    "microservices",
+    "devops tools",
+    "container management"
+  ],
+  authors: [{ name: "Compose Craft" }],
+  creator: "Compose Craft",
+  publisher: "Compose Craft",
+  metadataBase: new URL('https://composecraft.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Compose Craft - Docker Compose GUI Builder & Visualizer',
+    description: 'Create, visualize, and manage Docker Compose files effortlessly. The best free Docker Compose GUI builder for developers and teams.',
+    url: 'https://composecraft.com',
+    siteName: 'Compose Craft',
+    images: [
+      {
+        url: '/og.png',
+        width: 1200,
+        height: 627,
+        alt: 'Compose Craft - Docker Compose GUI Builder',
+      },
+    ],
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Compose Craft - Docker Compose GUI Builder & Visualizer',
+    description: 'Create, visualize, and manage Docker Compose files effortlessly. Free Docker Compose GUI builder.',
+    images: ['/og.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      'max-video-preview': -1,
+      'max-image-preview': 'large',
+      'max-snippet': -1,
     },
+  },
+  verification: {
+    // Add your verification codes here when available
+    // google: 'your-google-verification-code',
+    // yandex: 'your-yandex-verification-code',
+  },
 };
 
 export default function RootLayout({

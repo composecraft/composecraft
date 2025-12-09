@@ -5,6 +5,25 @@ import {Suspense} from "react";
 import {Skeleton} from "@/components/ui/skeleton";
 import SearchResult from "@/app/library/searchResult";
 import {fetchComposeBooks} from "@/actions/directus";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Docker Compose Library - Pre-built Templates & Examples",
+    description: "Browse our library of ready-to-use Docker Compose templates and configurations. Find examples for popular services, databases, and complete application stacks.",
+    alternates: {
+        canonical: 'https://composecraft.com/library',
+    },
+    openGraph: {
+        title: 'Docker Compose Library - Pre-built Templates & Examples',
+        description: 'Browse our library of ready-to-use Docker Compose templates and configurations.',
+        url: 'https://composecraft.com/library',
+    },
+    twitter: {
+        card: 'summary_large_image',
+        title: 'Docker Compose Library - Pre-built Templates & Examples',
+        description: 'Browse our library of ready-to-use Docker Compose templates and configurations.',
+    },
+};
 
 export default async function Page({
                                        searchParams,

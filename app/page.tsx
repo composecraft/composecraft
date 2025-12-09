@@ -11,10 +11,52 @@ import {Card, CardContent} from "@/components/ui/card";
 import {Album, GraduationCap, PencilLine} from "lucide-react";
 import Footer from "@/components/display/footer";
 import Nav from "@/components/ui/nav";
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+    title: "Compose Craft - Docker Compose GUI Builder & Visualizer",
+    description: "Create, visualize, and manage Docker Compose files effortlessly. The best free Docker Compose GUI builder and viewer for developers and teams. No credit card required.",
+    alternates: {
+        canonical: 'https://composecraft.com',
+    },
+};
 
 export default async function Page() {
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'SoftwareApplication',
+        name: 'Compose Craft',
+        applicationCategory: 'DeveloperApplication',
+        offers: {
+            '@type': 'Offer',
+            price: '0',
+            priceCurrency: 'USD',
+        },
+        operatingSystem: 'Web',
+        description: 'Create, visualize, and manage Docker Compose files effortlessly with Compose Craft. The best free Docker Compose GUI builder and viewer for developers and teams.',
+        url: 'https://composecraft.com',
+        image: 'https://composecraft.com/og.png',
+        aggregateRating: {
+            '@type': 'AggregateRating',
+            ratingValue: '5',
+            ratingCount: '1',
+        },
+        featureList: [
+            'Docker Compose GUI Builder',
+            'Visual Docker Compose Editor',
+            'YAML to Visual Converter',
+            'Drag and Drop Interface',
+            'Export Docker Compose Files',
+            'Share Compose Configurations',
+        ],
+    };
+
     return (
         <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
             <section className="flex flex-col w-screen flex-grow max-w-screen overflow-x-hidden">
                 <Nav />
                 <section className="grid grid-cols-1 grid-rows-1 bg-dot lg:bg-none bg-contain">

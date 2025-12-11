@@ -1,5 +1,3 @@
-"use server"
-
 import SearchInput from "@/components/ui/searchInput";
 import {Suspense} from "react";
 import {Skeleton} from "@/components/ui/skeleton";

@@ -1,22 +1,28 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
-import { jwtVerify } from 'jose'; // Importing the verification function
+import { jwtVerify } from 'jose';
+import { isCoreOnly } from '@/lib/config';
 
-function isCoreProductPage(path:string):boolean{
-    if(path.startsWith("/library")){
-        console.log("non core product page triggered redirect to /")
-        return false
-    }else if(path.startsWith("/docs")){
-        console.log("non core product page triggered redirect to /")
-        return false
+/**
+ * Check if the given path is a core product page
+ * In CORE_ONLY mode, non-core pages like /library and /docs are blocked
+ */
+function isCoreProductPage(path: string): boolean {
+    if (path.startsWith("/library")) {
+        console.log("non core product page triggered redirect to /");
+        return false;
+    } else if (path.startsWith("/docs")) {
+        console.log("non core product page triggered redirect to /");
+        return false;
     }
-    return true
+    return true;
 }
 
 export async function middleware(req: NextRequest) {
-    if(process.env.CORE_ONLY || false){
-        if(!isCoreProductPage(req.nextUrl.pathname)){
+    // Block non-core pages in CORE_ONLY mode
+    if (isCoreOnly()) {
+        if (!isCoreProductPage(req.nextUrl.pathname)) {
             return NextResponse.redirect(new URL("/", req.url));
         }
     }

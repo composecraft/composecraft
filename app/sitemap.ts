@@ -1,9 +1,15 @@
 import type { MetadataRoute } from 'next'
 import {fetchComposeBooks} from "@/actions/directus";
 import {ComposeBookType} from "@/app/library/composeBook";
+import { isCoreOnly } from '@/lib/config';
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+    // In CORE_ONLY mode, return empty sitemap (no SEO indexing needed)
+    if (isCoreOnly()) {
+        return [];
+    }
 
+    // Production mode: generate full sitemap
     const initalFetch = await fetchComposeBooks({
         limit: 100
     })

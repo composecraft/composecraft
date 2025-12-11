@@ -32,6 +32,14 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
     const userExist = await collection.findOne({email: email})
     const secretKey = process.env.SECRET_KEY
     if (userExist) {
+        // Compare the hashed password with the input password
+        const passwordMatch = await bcrypt.compare(data.password, userExist.password);
+
+        // If the password doesn't match, throw an error
+        if (!passwordMatch) {
+            throw new Error("Invalid email or password");
+        }
+
         const token = await new SignJWT({userId: userExist._id, email:userExist.email})
             .setProtectedHeader({alg: 'HS256'}) // Algorithm for signing the JWT
             .setExpirationTime('31d') // Set the expiration time to 31 days

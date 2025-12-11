@@ -7,6 +7,7 @@ import { DM_Sans } from 'next/font/google'
 import CoreBanner from "@/components/ui/coreBanner";
 import Instrumentation from "@/components/instrumentation";
 import Script from "next/script";
+import { isCoreOnly } from "@/lib/config";
 
 const dm_sans = DM_Sans({ subsets: ['latin'] })
 
@@ -22,8 +23,21 @@ const geistMono = localFont({
   weight: "100 900",
 });
 
-// eslint-disable-next-line react-refresh/only-export-components
-export const metadata: Metadata = {
+/**
+ * Get minimal metadata for CORE_ONLY mode (self-hosted instances)
+ */
+const getCoreMetadata = (): Metadata => ({
+  title: "Compose Craft",
+  robots: {
+    index: false,
+    follow: false,
+  },
+});
+
+/**
+ * Get full metadata with SEO for production mode
+ */
+const getFullMetadata = (): Metadata => ({
   title: {
     default: "Compose Craft - Docker Compose GUI Builder & Visualizer",
     template: "%s | Compose Craft"
@@ -88,7 +102,12 @@ export const metadata: Metadata = {
     // google: 'your-google-verification-code',
     // yandex: 'your-yandex-verification-code',
   },
-};
+});
+
+// eslint-disable-next-line react-refresh/only-export-components
+export const metadata: Metadata = isCoreOnly() 
+  ? getCoreMetadata() 
+  : getFullMetadata();
 
 export default function RootLayout({
   children,

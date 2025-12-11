@@ -18,6 +18,7 @@ import {Translator} from "@composecraft/docker-compose-lib";
 import usePositionMap from "@/store/metadataMap";
 import {extractMetadata} from "@/lib/metadata";
 import { useRouter } from 'next/navigation'
+import { isCoreOnly } from "@/lib/config";
 
 export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlayGround?:boolean}){
 
@@ -91,11 +92,15 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
                 </label>
             </div>
             <Button className="bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF]" type="submit">Create an account</Button>
-            <Separator/>
-            <div className="flex flex-row w-full">
-                <GithubAuth/>
-            </div>
-            <Separator/>
+            {!isCoreOnly() && (
+                <>
+                    <Separator/>
+                    <div className="flex flex-row w-full">
+                        <GithubAuth/>
+                    </div>
+                    <Separator/>
+                </>
+            )}
             <div className="flex flex-row gap-5">
                 <Button asChild variant="default" className="w-1/2">
                     <Link href="/login">Login</Link>

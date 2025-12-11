@@ -12,6 +12,10 @@ import {Album, GraduationCap, PencilLine} from "lucide-react";
 import Footer from "@/components/display/footer";
 import Nav from "@/components/ui/nav";
 import type { Metadata } from "next";
+import { redirect } from 'next/navigation';
+import { cookies } from 'next/headers';
+import { jwtVerify } from 'jose';
+import { isCoreOnly } from '@/lib/config';
 
 export const metadata: Metadata = {
     title: "Compose Craft - Docker Compose GUI Builder & Visualizer",
@@ -22,6 +26,28 @@ export const metadata: Metadata = {
 };
 
 export default async function Page() {
+    // In CORE_ONLY mode, redirect to login or dashboard
+    if (isCoreOnly()) {
+        const token = (await cookies()).get('token')?.value;
+        
+        if (token) {
+            try {
+                // Verify the token
+                const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
+                await jwtVerify(token, secretKey);
+                // User is authenticated, redirect to dashboard
+                redirect('/dashboard');
+            } catch {
+                // Token is invalid, redirect to login
+                redirect('/login');
+            }
+        } else {
+            // No token, redirect to login
+            redirect('/login');
+        }
+    }
+
+    // Marketing page content (only shown in non-CORE mode)
     const jsonLd = {
         '@context': 'https://schema.org',
         '@type': 'SoftwareApplication',
@@ -53,10 +79,12 @@ export default async function Page() {
 
     return (
         <>
-            <script
-                type="application/ld+json"
-                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-            />
+            {!isCoreOnly() && (
+                <script
+                    type="application/ld+json"
+                    dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+                />
+            )}
             <section className="flex flex-col w-screen flex-grow max-w-screen overflow-x-hidden">
                 <Nav />
                 <section className="grid grid-cols-1 grid-rows-1 bg-dot lg:bg-none bg-contain">

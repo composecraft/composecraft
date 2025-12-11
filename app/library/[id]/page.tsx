@@ -21,11 +21,41 @@ export async function generateMetadata(
     const params = await props.params;
     const composeBook = await fetchComposeBookById(params.id) as ComposeBookType
 
+    const title = `${composeBook.title} - Docker Compose Template`;
+    const description = composeBook.description 
+        ? addExtraDots(composeBook.description, 155) 
+        : `Learn how to self-host ${composeBook.title} with this ready-to-use Docker Compose template. Free to download and customize.`;
+
     return {
-        title: `Docker compose ${composeBook.title}`,
-        description: `Compose craft help you with : ${composeBook.description ? addExtraDots(composeBook.description,100) : "self-host " + composeBook.title}`,
-        applicationName: composeBook.title,
-        //keywords: flat_tags(composeBook.tags)
+        title: title,
+        description: description,
+        keywords: flat_tags(composeBook.tags),
+        alternates: {
+            canonical: `https://composecraft.com/library/${params.id}`,
+        },
+        openGraph: {
+            title: title,
+            description: description,
+            url: `https://composecraft.com/library/${params.id}`,
+            type: 'article',
+            publishedTime: composeBook.date_created,
+            modifiedTime: composeBook.date_updated,
+            tags: flat_tags(composeBook.tags),
+            images: [
+                {
+                    url: '/og.png',
+                    width: 1200,
+                    height: 627,
+                    alt: `${composeBook.title} Docker Compose Template`,
+                },
+            ],
+        },
+        twitter: {
+            card: 'summary_large_image',
+            title: title,
+            description: description,
+            images: ['/og.png'],
+        },
     }
 }
 
@@ -40,8 +70,36 @@ export default async function Page({
 
     const composeBook = await fetchComposeBookById(id) as ComposeBookType
 
+    const jsonLd = {
+        '@context': 'https://schema.org',
+        '@type': 'TechArticle',
+        headline: `${composeBook.title} - Docker Compose Template`,
+        description: composeBook.description || `Learn how to self-host ${composeBook.title} with Docker Compose`,
+        image: 'https://composecraft.com/og.png',
+        datePublished: composeBook.date_created,
+        dateModified: composeBook.date_updated,
+        author: {
+            '@type': 'Organization',
+            name: 'Compose Craft',
+        },
+        publisher: {
+            '@type': 'Organization',
+            name: 'Compose Craft',
+            logo: {
+                '@type': 'ImageObject',
+                url: 'https://composecraft.com/og.png',
+            },
+        },
+        keywords: flat_tags(composeBook.tags).join(', '),
+    };
+
     return(
-        <div className="px-2 md:px-10 md:mt-10 flex flex-col gap-5">
+        <>
+            <script
+                type="application/ld+json"
+                dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+            />
+            <div className="px-2 md:px-10 md:mt-10 flex flex-col gap-5">
             <p className="text-2xl font-black">
                 {composeBook.title}
             </p>
@@ -71,5 +129,6 @@ export default async function Page({
                 </div>
             </div>
         </div>
+        </>
     )
 }

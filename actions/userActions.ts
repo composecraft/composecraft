@@ -17,14 +17,6 @@ import {generateRandomString, isWithinOneDay} from "@/lib/utils";
 // @ts-ignore
 import { Base64UrlDecoder } from 'next-base64-encoder';
 
-const registerSchema = zfd.formData({
-    email: z.string().email(),
-    password: z.string().min(6).max(100),
-    company: z.string(),
-    terms: z.string(),
-    data: z.optional(z.string())
-})
-
 export async function createOrLoginUser(email:string,data:any):Promise<string>{
     await client.connect()
     const db = client.db("compose_craft")
@@ -32,6 +24,14 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
     const userExist = await collection.findOne({email: email})
     const secretKey = process.env.SECRET_KEY
     if (userExist) {
+        // Compare the hashed password with the input password
+        const passwordMatch = await bcrypt.compare(data.password, userExist.password);
+
+        // If the password doesn't match, throw an error
+        if (!passwordMatch) {
+            throw new Error("Invalid email or password");
+        }
+
         const token = await new SignJWT({userId: userExist._id, email:userExist.email})
             .setProtectedHeader({alg: 'HS256'}) // Algorithm for signing the JWT
             .setExpirationTime('31d') // Set the expiration time to 31 days
@@ -48,6 +48,7 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
 
         return userExist._id.toString()
     }
+    data.password = await bcrypt.hash(data.password, 10);
     const result = await collection.insertOne({email: email, ...data, createdAt: new Date().getTime()});
     if (!secretKey) {
         throw new Error("error on our admin system")
@@ -71,38 +72,34 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
     return ""
 }
 
-export const registerUser = actionClient
-    .schema(registerSchema)
-    .action(async ({parsedInput: {email, password, company, terms,data}}) => {
-        if(process.env.DISABLE_SIGNUP){
-            console.error("Signup is disabled")
-            throw new PassToClientError("Signup is disabled")
-        }
-        // eslint-disable-next-line no-useless-catch
-        try {
-            await client.connect()
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const brevoId = await registerUserToBrevo({email: email})
-            const user = {
-                email: email,
-                password: hashedPassword,
-                companyType: company,
-                termsAccepted: !!terms,
-                brevoId: brevoId
-            }
-            await createOrLoginUser(user.email,user)
-            if(data){
-                const byteArrayPhrase = new TextEncoder().encode(data);
-                const base64UrlDecoder = new Base64UrlDecoder();
-                const base64UrlPhrase = base64UrlDecoder.decode(byteArrayPhrase);
-                redirect("/dashboard/playground?data="+base64UrlPhrase)
-            }
-            return true
-        } catch (e) {
-            throw e;
-        }
-    })
-
+export async function registerUser(email:string, password:string, company:string, terms:boolean,data:string) {
+    if(process.env.DISABLE_SIGNUP){
+        console.error("Signup is disabled")
+        throw new PassToClientError("Signup is disabled")
+    }
+    // eslint-disable-next-line no-useless-catch
+    await client.connect()
+    const brevoId = await registerUserToBrevo({email: email})
+    const user = {
+        email: email,
+        password: password,
+        companyType: company,
+        termsAccepted: !!terms,
+        brevoId: brevoId
+    }
+    await createOrLoginUser(user.email,user)
+    const parsedData = JSON.parse(data)
+    if(Object.keys(parsedData)?.length === 0){
+        return ""
+    }
+    if(data){
+        const byteArrayPhrase = new TextEncoder().encode(JSON.stringify(parsedData));
+        const base64UrlDecoder = new Base64UrlDecoder();
+        const base64UrlPhrase = base64UrlDecoder.decode(byteArrayPhrase);
+        return base64UrlPhrase
+    }
+    return true
+}
 
 export const registerCompose = async (compose: object,metadata:composeMetadata, id?: string | undefined) => {
     const payload = await ensureAuth()

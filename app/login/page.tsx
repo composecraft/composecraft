@@ -11,6 +11,7 @@ import {loginUser} from "@/actions/userActions";
 import toast from "react-hot-toast";
 import GithubAuth from "@/components/ui/githubAuth";
 import {Separator} from "@/components/ui/separator";
+import { isCoreOnly } from "@/lib/config";
 
 export default function Dashboard() {
     const router = useRouter()
@@ -37,14 +38,18 @@ export default function Dashboard() {
                             <Input required name="password" type="password"/>
                         </div>
                         <Button type="submit">login</Button>
-                        <Separator />
-                            <GithubAuth />
-                        <Separator />
+                        {!isCoreOnly() && (
+                            <>
+                                <Separator suppressHydrationWarning />
+                                <GithubAuth />
+                                <Separator />
+                            </>
+                        )}
                         <div className="flex flex-row gap-5">
                             <Button asChild variant="default" className="w-1/2">
                                 <Link href="/signin">Create an account</Link>
                             </Button>
-                            <Button variant="outline" className="w-1/2">
+                            <Button variant="outline" type="button" className="w-1/2">
                                 <Link href="/forgotPassword">Password recover</Link>
                             </Button>
                         </div>

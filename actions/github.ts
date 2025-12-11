@@ -32,7 +32,7 @@ export async function AuthWithGithub(cli:boolean){
     const randomString = crypto.randomBytes(32).toString('hex');
     CSRF_collection.insertOne({
         token: randomString,
-        createdAt: new Date().getDate()
+        createdAt: new Date().getTime() // FIXED: Changed from getDate() to getTime() for proper timestamp
     })
     const githubClientId = process.env.GITHUB_CLIENT_ID
     const redirectUri =  process.env.URL+"/api/auth/external"

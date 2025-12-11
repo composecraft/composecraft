@@ -9,7 +9,6 @@ import Link from "next/link";
 import {Button} from "@/components/ui/button";
 import {Separator} from "@/components/ui/separator";
 import GithubAuth from "@/components/ui/githubAuth";
-import {useAction} from "next-safe-action/hooks";
 import {registerUser} from "@/actions/userActions";
 import toast from "react-hot-toast";
 import {useState} from "react";
@@ -17,8 +16,8 @@ import {useComposeStore} from "@/store/compose";
 import {Translator} from "@composecraft/docker-compose-lib";
 import usePositionMap from "@/store/metadataMap";
 import {extractMetadata} from "@/lib/metadata";
-import { useRouter } from 'next/navigation'
 import { isCoreOnly } from "@/lib/config";
+import { useRouter } from 'next/navigation'
 
 export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlayGround?:boolean}){
 
@@ -26,41 +25,44 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
     const {positionMap} = usePositionMap()
     const router = useRouter()
 
-    const {execute} = useAction(registerUser,{
-        onSuccess:()=>{router.push("/dashboard")},
-        onError:((e)=>{
-            if(e?.error?.serverError){
-                toast.error(e?.error?.serverError.toString())
-            }else{
-                console.log(e)
-                toast.error("this email is probably already used")
-            }
-        })
-    })
-
     const [companyType, setCompanyType] = useState("")
+    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("")
 
-    const handleSubmit = (formData:FormData) => {
+    async function submit(e: React.FormEvent) {
+        e.preventDefault()
+        let data = {}
         if(redirectToPlayGround){
             const t = new Translator(compose)
-            formData.append("data", JSON.stringify({
+            data = JSON.stringify({
                 compose: t.toDict(),
                 metadata : extractMetadata(compose, positionMap),
-            }))
+            })
         }
-        execute(formData);
-    };
+        const registerPromise = registerUser(email,password,companyType,true,JSON.stringify(data))
+        toast.promise(registerPromise,{
+            success: (data:string)=>{
+                if(data!=""){
+                    router.push("/dashboard/playground?data="+data)
+                }else{
+                    router.push("/dashboard")
+                }
+            },
+            loading: "loading",
+            error: (e: Error)=>{return e.message}
+        })
+    }
 
     return (
-        <form action={handleSubmit} className="flex flex-col gap-5">
+        <form onSubmit={submit} className="flex flex-col gap-5">
             <h1 className="text-3xl text-primary font-bold bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF] w-fit text-transparent bg-clip-text">Create an account</h1>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input required name="email" placeholder="your@email.fr"/>
+                <Input required name="email" placeholder="your@email.fr" value={email} onChange={(e) => setEmail(e.target.value)}/>
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="password">password</Label>
-                <Input required name="password" type="password"/>
+                <Input required name="password" type="password" value={password} onChange={(e) => setPassword(e.target.value)}/>
             </div>
             <div className="flex flex-col gap-2">
                 <Label htmlFor="company" className="flex justify-between">
@@ -106,7 +108,7 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
                     <Link href="/login">Login</Link>
                 </Button>
                 <Button variant="outline" className="w-1/2">
-                    <Link href="/public">Password recover</Link>
+                    <Link href="/forgotPassword">Password recover</Link>
                 </Button>
             </div>
         </form>

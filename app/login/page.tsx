@@ -49,7 +49,7 @@ export default function Dashboard() {
                             <Button asChild variant="default" className="w-1/2">
                                 <Link href="/signin">Create an account</Link>
                             </Button>
-                            <Button variant="outline" className="w-1/2">
+                            <Button variant="outline" type="button" className="w-1/2">
                                 <Link href="/forgotPassword">Password recover</Link>
                             </Button>
                         </div>

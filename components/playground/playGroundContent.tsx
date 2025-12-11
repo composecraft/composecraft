@@ -90,9 +90,10 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
             const byteArrayPhrase = base64UrlEncoder.encode(data);
             const decodedPhrase = new TextDecoder().decode(byteArrayPhrase)
             const parsedObj = JSON.parse(decodedPhrase)
-            const savedCompose = Translator.fromDict(parsedObj?.compose)
-            reHydrateComposeIds(savedCompose,parsedObj.metadata)
-            setPositionMap(recreatePositionMap(parsedObj.metadata.positionMap))
+            const actualObj = JSON.parse(parsedObj)  // Parse twice!
+            const savedCompose = Translator.fromDict(actualObj?.compose)
+            reHydrateComposeIds(savedCompose,actualObj.metadata)
+            setPositionMap(recreatePositionMap(actualObj.metadata.positionMap))
             replaceCompose(savedCompose,replaceComposeOptions)
         }
     }, [inviteMode, replaceCompose, replaceComposeOptions, searchParams, setId, setPositionMap]);

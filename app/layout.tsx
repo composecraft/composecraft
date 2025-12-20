@@ -9,7 +9,7 @@ import VersionUpdateBanner from "@/components/ui/versionUpdateBanner";
 import Instrumentation from "@/components/instrumentation";
 import Script from "next/script";
 import { getCachedLastVersion } from "@/lib/utils";
-import { version as packageVersion } from "@/package.json"
+import packageJson from "@/package.json"
 
 const dm_sans = DM_Sans({ subsets: ['latin'] })
 
@@ -26,6 +26,7 @@ const geistMono = localFont({
 });
 
 // CORE_ONLY mode: minimal metadata, no SEO indexing
+// eslint-disable-next-line react-refresh/only-export-components
 export const metadata: Metadata = {
   title: "Compose Craft",
   robots: {
@@ -41,7 +42,7 @@ export default async function RootLayout({
 }>) {
 
 
-  let version = packageVersion
+  let version = packageJson.version
   try {
     version = await getCachedLastVersion()
   } catch (error) {
@@ -49,7 +50,7 @@ export default async function RootLayout({
     // Continue with current version if fetch fails
   }
 
-  const showUpdateBanner = version != packageVersion
+  const showUpdateBanner = version != packageJson.version
 
   return (
     <html lang="en">
@@ -75,7 +76,7 @@ export default async function RootLayout({
       <CoreBanner />
       {showUpdateBanner && (
         <VersionUpdateBanner
-          currentVersion={packageVersion}
+          currentVersion={packageJson.version}
           latestVersion={version}
         />
       )}

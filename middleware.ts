@@ -4,6 +4,16 @@ import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
 
 export async function middleware(req: NextRequest) {
+    // Check if SECRET_KEY is configured
+    const secretKey = process.env.SECRET_KEY;
+    if (!secretKey) {
+        console.error("SECRET_KEY environment variable is not configured. Authentication cannot be verified.");
+        // Fail securely by redirecting to home page
+        return NextResponse.redirect(new URL("/", req.url));
+    }
+
+    const encodedSecretKey = new TextEncoder().encode(secretKey);
+
     // Apply checkAuth to routes under /dashboard
     if (req.nextUrl.pathname.includes("/dashboard")) {
         const rawToken = (await cookies()).get("token")?.value;
@@ -13,14 +23,11 @@ export async function middleware(req: NextRequest) {
                 return NextResponse.redirect(new URL("/", req.url));
             }
 
-            // Secret key needs to be a Uint8Array for jose
-            const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-
             // Verify the token using jose's jwtVerify method
-            await jwtVerify(rawToken, secretKey);
+            await jwtVerify(rawToken, encodedSecretKey);
 
         } catch (error) {
-            console.error(error);
+            console.error("JWT verification failed:", error);
             return NextResponse.redirect(new URL("/", req.url));
         }
     } else if (req.nextUrl.pathname.includes("/login") && !req.nextUrl.pathname.includes("/cli")) {
@@ -28,12 +35,11 @@ export async function middleware(req: NextRequest) {
 
         try {
             if (rawToken) {
-                const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-                await jwtVerify(rawToken, secretKey);
+                await jwtVerify(rawToken, encodedSecretKey);
                 return NextResponse.redirect(new URL("/dashboard", req.url));
             }
         } catch (error) {
-            console.error(error);
+            console.error("JWT verification failed:", error);
             return NextResponse.redirect(new URL("/", req.url));
         }
     } else if (req.nextUrl.pathname.includes("/signin")) {
@@ -41,12 +47,11 @@ export async function middleware(req: NextRequest) {
 
         try {
             if (rawToken) {
-                const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-                await jwtVerify(rawToken, secretKey);
+                await jwtVerify(rawToken, encodedSecretKey);
                 return NextResponse.redirect(new URL("/dashboard", req.url));
             }
         } catch (error) {
-            console.error(error);
+            console.error("JWT verification failed:", error);
             return NextResponse.redirect(new URL("/", req.url));
         }
     }

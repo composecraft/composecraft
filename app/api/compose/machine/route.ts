@@ -18,9 +18,15 @@ function getFormattedDate() {
 export async function POST(req: Request) {
     const token = req.headers.get("Authorization")
     if(token){
-        const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
+        const secretKey = process.env.SECRET_KEY;
+        if (!secretKey) {
+            console.error("SECRET_KEY is not configured");
+            return NextResponse.json({error: "Server configuration error"}, {status: 500})
+        }
+
+        const encodedSecretKey = new TextEncoder().encode(secretKey);
         try{
-            const {payload} = await jwtVerify(token || "", secretKey);
+            const {payload} = await jwtVerify(token || "", encodedSecretKey);
             const body = await req.json();
             const compose = new Compose()
             Object.keys(body?.containers || {}).forEach(key=>{

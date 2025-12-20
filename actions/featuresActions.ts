@@ -16,8 +16,16 @@ export type FeatureType = {
 
 export const getAllFeatures = async () => {
     const rawToken = (await cookies()).get("token")?.value;
-    const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-    const { payload } = await jwtVerify(rawToken || "", secretKey);
+
+    // Check if SECRET_KEY is configured
+    const secretKey = process.env.SECRET_KEY;
+    if (!secretKey) {
+        console.error("SECRET_KEY environment variable is not configured. Cannot verify authentication.");
+        throw new Error("Server configuration error");
+    }
+
+    const encodedSecretKey = new TextEncoder().encode(secretKey);
+    const { payload } = await jwtVerify(rawToken || "", encodedSecretKey);
     const userId = new ObjectId(payload.userId as string);
 
     await client.connect();
@@ -48,8 +56,16 @@ export const getAllFeatures = async () => {
 
 export const toggleFeatureLike = async (featureId:string) => {
     const rawToken = (await cookies()).get("token")?.value;
-    const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-    const { payload } = await jwtVerify(rawToken || "", secretKey);
+
+    // Check if SECRET_KEY is configured
+    const secretKey = process.env.SECRET_KEY;
+    if (!secretKey) {
+        console.error("SECRET_KEY environment variable is not configured. Cannot verify authentication.");
+        throw new Error("Server configuration error");
+    }
+
+    const encodedSecretKey = new TextEncoder().encode(secretKey);
+    const { payload } = await jwtVerify(rawToken || "", encodedSecretKey);
     const userId = new ObjectId(payload.userId as string);
 
     await client.connect();

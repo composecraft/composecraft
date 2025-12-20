@@ -1,4 +1,4 @@
-import {Compose, Volume} from "@composecraft/docker-compose-lib";
+import {Compose, Service, Volume} from "@composecraft/docker-compose-lib";
 
 export function handleBackspacePress(select: string, setCompose: (updater: (currentCompose: Compose) => void) => void, setSelectedString: (value: string) => void) {
     switch (select.substring(0, 3)) {
@@ -46,6 +46,13 @@ export function handleBackspacePress(select: string, setCompose: (updater: (curr
                             })
                         }
                         break
+                    case "lab":
+                        const lab_ser = compose.services.get("id", select.substring(44)) as Service
+                        const lab = lab_ser.labels?.find(l=>l.id === select.substring(4, 44))
+                        if (lab_ser && lab) {
+                            lab_ser.labels = lab_ser.labels?.filter(l=>l.id != lab.id)
+                        }
+                        break
                     default:
                         break
                 }
@@ -76,6 +83,15 @@ export function handleBackspacePress(select: string, setCompose: (updater: (curr
                     setSelectedString("")
                     compose.removeEnv(env)
                 }
+            })
+            break
+        case "lab":
+            setCompose((compose: any) => {
+                compose.services.forEach((ser: Service) => {
+                    if(ser.labels){
+                        ser.labels = ser.labels.filter(l=>l.id!=select)
+                    }
+                })
             })
             break
         case "bin":

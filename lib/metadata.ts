@@ -20,6 +20,7 @@ export type composeMetadata = {
         volumesIds: nameId[];
         bindingsIds: nameId[];
         envsIds: nameId[];
+        labelsIds: nameId[];
     }
     positionMap: PositionMap[]
 }
@@ -31,7 +32,8 @@ export function extractMetadata(compose:Compose,positionMap:Map<string,NodeData>
             networksIds: [],
             volumesIds: [],
             bindingsIds: [],
-            envsIds: []
+            envsIds: [],
+            labelsIds: []
         },
         positionMap: []
     }
@@ -41,6 +43,9 @@ export function extractMetadata(compose:Compose,positionMap:Map<string,NodeData>
             if(typeof bin.source === "string"){
                 result.Ids.bindingsIds.push({name: bin.source, id: bin.id})
             }
+        })
+        service.labels?.forEach(label => {
+            result.Ids.labelsIds.push({name: `${service.id}___${label.key}`, id: label.id})
         })
     })
     compose.networks.forEach(network=>result.Ids.networksIds.push({name: network.name, id: network.id}))
@@ -53,11 +58,12 @@ export function extractMetadata(compose:Compose,positionMap:Map<string,NodeData>
             y: key.position.y
         }
     }))
-    //console.log(result)
+    console.log(result)
     return result
 }
 
 export function reHydrateComposeIds(compose:Compose,metadata:composeMetadata){
+    console.log(metadata)
     metadata.Ids.servicesIds.forEach(({name,id})=>{
         const service = Array.from(compose.services).find(s=>s.name === name)
         if(service){
@@ -86,6 +92,18 @@ export function reHydrateComposeIds(compose:Compose,metadata:composeMetadata){
         const vol = Array.from(compose.volumes).find(n=>n.name === name)
         if(vol){
             vol.id = id
+        }
+    })
+    metadata.Ids.labelsIds.forEach(({name, id}) => {
+        const [serviceId, labelKey] = name.split('___');
+        if (serviceId && labelKey) {
+            const service = Array.from(compose.services).find(s => s.id === serviceId);
+            if (service) {
+                const label = service.labels?.find(l => l.key === labelKey);
+                if (label) {
+                    label.id = id;
+                }
+            }
         }
     })
 }

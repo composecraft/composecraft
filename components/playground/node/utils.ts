@@ -26,3 +26,8 @@ export const envEdgeStyle = {
     style : {stroke: '#8B5CF6', strokeWidth: 2},
     animated: false,
 }
+
+export const labelEdgeStyle = {
+    style : {stroke: '#F6339A', strokeWidth: 2},
+    animated: false,
+}

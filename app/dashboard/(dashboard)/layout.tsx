@@ -2,13 +2,10 @@
 
 import {ReactNode} from "react";
 import ClientLayout from "@/app/dashboard/(dashboard)/clientLayout";
-import getConfig from "next/config";
 
 export default async function Layout({ children }: { children: ReactNode }) {
-  const { publicRuntimeConfig } = getConfig();
-
   return (
-    <ClientLayout version={publicRuntimeConfig?.version}>
+    <ClientLayout version={process.env.NEXT_PUBLIC_VERSION || "1.0.0"}>
       {children}
     </ClientLayout>
   );

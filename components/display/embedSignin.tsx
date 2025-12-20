@@ -7,8 +7,6 @@ import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/c
 import {Checkbox} from "@/components/ui/checkbox";
 import Link from "next/link";
 import {Button} from "@/components/ui/button";
-import {Separator} from "@/components/ui/separator";
-import GithubAuth from "@/components/ui/githubAuth";
 import {registerUser} from "@/actions/userActions";
 import toast from "react-hot-toast";
 import {useState} from "react";
@@ -16,7 +14,6 @@ import {useComposeStore} from "@/store/compose";
 import {Translator} from "@composecraft/docker-compose-lib";
 import usePositionMap from "@/store/metadataMap";
 import {extractMetadata} from "@/lib/metadata";
-import { isCoreOnly } from "@/lib/config";
 import { useRouter } from 'next/navigation'
 
 export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlayGround?:boolean}){
@@ -94,15 +91,6 @@ export default function EmbedSignin({redirectToPlayGround=false}:{redirectToPlay
                 </label>
             </div>
             <Button className="bg-gradient-to-r from-[#1A96F8] via-[#3AA8FF] to-[#62BEFF]" type="submit">Create an account</Button>
-            {!isCoreOnly() && (
-                <>
-                    <Separator/>
-                    <div className="flex flex-row w-full">
-                        <GithubAuth/>
-                    </div>
-                    <Separator/>
-                </>
-            )}
             <div className="flex flex-row gap-5">
                 <Button asChild variant="default" className="w-1/2">
                     <Link href="/login">Login</Link>

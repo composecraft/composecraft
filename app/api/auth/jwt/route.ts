@@ -50,9 +50,15 @@ export async function POST(req:Request){
     const body = await req.json();
     const token = body.token;
     if(token){
-        const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
+        const secretKey = process.env.SECRET_KEY;
+        if (!secretKey) {
+            console.error("SECRET_KEY is not configured");
+            return NextResponse.json({error: "Server configuration error"}, {status: 500})
+        }
+
+        const encodedSecretKey = new TextEncoder().encode(secretKey);
         try{
-            await jwtVerify(token || "", secretKey);
+            await jwtVerify(token || "", encodedSecretKey);
             return NextResponse.json({}, {status: 200})
         }catch (e:any){
             console.error(e)

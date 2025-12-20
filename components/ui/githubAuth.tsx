@@ -2,15 +2,12 @@ import {Button} from "@/components/ui/button";
 import {AuthWithGithub} from "@/actions/github";
 import toast from "react-hot-toast";
 import Image from "next/image";
-import { isCoreOnly } from "@/lib/config";
 
 import ghLogo from "@/assets/github-mark-white.png"
 
 export default function GithubAuth({cli=false}:{cli?:boolean}){
-    // Hide OAuth in CORE_ONLY mode (self-hosted instances)
-    if (isCoreOnly()) {
-        return null;
-    }
+    // OAuth is not available in CORE_ONLY deployment
+    return null;
 
     async function handleConnect(){
         try{

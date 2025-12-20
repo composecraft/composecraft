@@ -1,5 +1,7 @@
+import axios from "axios"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
+import { unstable_cache } from 'next/cache'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -52,4 +54,41 @@ export function isWithinOneDay(timestamp1: number, timestamp2: number): boolean 
   const oneDayInMilliseconds = 24 * 60 * 60 * 1000; // 1 day in ms
   const difference = Math.abs(timestamp1 - timestamp2); // Absolute difference
   return difference <= oneDayInMilliseconds;
+}
+
+export async function GetLastVersion():Promise<string>{
+  console.log("fetching")
+  const res = await axios.get(
+        "https://api.github.com/repos/composecraft/composecraft/releases/latest",
+    );
+  const data = res.data
+  return data?.tag_name
+}
+
+export const getCachedLastVersion = async (): Promise<string> => {
+  const cacheKey = 'last-version'
+  const cacheDuration = 6 * 60 * 60 * 1000 // 6 hours in milliseconds
+
+  // Try to get cached version first
+  const cachedVersion = await unstable_cache(
+    async () => {
+      try {
+        const res = await axios.get(
+          "https://api.github.com/repos/composecraft/composecraft/releases/latest",
+        );
+        const data = res.data
+        return data?.tag_name
+      } catch (error) {
+        console.error("Failed to fetch latest version:", error)
+        return undefined
+      }
+    },
+    [cacheKey],
+    {
+      revalidate: cacheDuration / 1000, // Convert to seconds
+      tags: [cacheKey]
+    }
+  )()
+
+  return cachedVersion
 }

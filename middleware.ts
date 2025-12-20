@@ -2,30 +2,18 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
-import { isCoreOnly } from '@/lib/config';
-
-/**
- * Check if the given path is a core product page
- * In CORE_ONLY mode, non-core pages like /library and /docs are blocked
- */
-function isCoreProductPage(path: string): boolean {
-    if (path.startsWith("/library")) {
-        console.log("non core product page triggered redirect to /");
-        return false;
-    } else if (path.startsWith("/docs")) {
-        console.log("non core product page triggered redirect to /");
-        return false;
-    }
-    return true;
-}
 
 export async function middleware(req: NextRequest) {
-    // Block non-core pages in CORE_ONLY mode
-    if (isCoreOnly()) {
-        if (!isCoreProductPage(req.nextUrl.pathname)) {
-            return NextResponse.redirect(new URL("/", req.url));
-        }
+    // Check if SECRET_KEY is configured
+    const secretKey = process.env.SECRET_KEY;
+    if (!secretKey) {
+        console.error("SECRET_KEY environment variable is not configured. Authentication cannot be verified.");
+        // Fail securely by redirecting to home page
+        return NextResponse.redirect(new URL("/", req.url));
     }
+
+    const encodedSecretKey = new TextEncoder().encode(secretKey);
+
     // Apply checkAuth to routes under /dashboard
     if (req.nextUrl.pathname.includes("/dashboard")) {
         const rawToken = (await cookies()).get("token")?.value;
@@ -35,58 +23,35 @@ export async function middleware(req: NextRequest) {
                 return NextResponse.redirect(new URL("/", req.url));
             }
 
-            // Secret key needs to be a Uint8Array for jose
-            const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-
             // Verify the token using jose's jwtVerify method
-            // eslint-disable-next-line @typescript-eslint/no-unused-vars
-            await jwtVerify(rawToken, secretKey);
-
-            // You can access the decoded token payload
-            //console.log(payload);
+            await jwtVerify(rawToken, encodedSecretKey);
 
         } catch (error) {
-            console.error(error);
+            console.error("JWT verification failed:", error);
             return NextResponse.redirect(new URL("/", req.url));
         }
-    }else if(req.nextUrl.pathname.includes("/login") && !req.nextUrl.pathname.includes("/cli")){
+    } else if (req.nextUrl.pathname.includes("/login") && !req.nextUrl.pathname.includes("/cli")) {
         const rawToken = (await cookies()).get("token")?.value;
 
         try {
-            if(rawToken){
-                const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-                await jwtVerify(rawToken, secretKey);
+            if (rawToken) {
+                await jwtVerify(rawToken, encodedSecretKey);
                 return NextResponse.redirect(new URL("/dashboard", req.url));
             }
         } catch (error) {
-            console.error(error);
+            console.error("JWT verification failed:", error);
             return NextResponse.redirect(new URL("/", req.url));
         }
-    }else if(req.nextUrl.pathname.includes("/tryIt")){
+    } else if (req.nextUrl.pathname.includes("/signin")) {
         const rawToken = (await cookies()).get("token")?.value;
 
         try {
-            if(rawToken){
-                const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-                await jwtVerify(rawToken, secretKey);
-                return NextResponse.redirect(new URL("/dashboard/playground", req.url));
-            }
-        } catch (error) {
-            console.error(error);
-            return NextResponse.redirect(new URL("/", req.url));
-        }
-    }
-    else if(req.nextUrl.pathname.includes("/signin")){
-        const rawToken = (await cookies()).get("token")?.value;
-
-        try {
-            if(rawToken){
-                const secretKey = new TextEncoder().encode(process.env.SECRET_KEY || "");
-                await jwtVerify(rawToken, secretKey);
+            if (rawToken) {
+                await jwtVerify(rawToken, encodedSecretKey);
                 return NextResponse.redirect(new URL("/dashboard", req.url));
             }
         } catch (error) {
-            console.error(error);
+            console.error("JWT verification failed:", error);
             return NextResponse.redirect(new URL("/", req.url));
         }
     }

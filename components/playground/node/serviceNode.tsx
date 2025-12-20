@@ -15,7 +15,7 @@ export default function ServiceNode({ data }:{data:{service:Service}}) {
             <Handle id='service' type="target" position={Position.Top} isConnectable={true} />
             <Card className={`flex border-2 border-blue-500 ${selectedId===data.service.id ? "bg-blue-100" : ""}`}>
                 <CardContent className="p-3">
-                    <div className="flex flex-row gap-3 items-center h-[40px] mb-2">
+                    <div className="flex flex-row gap-3 items-center h-[40px]">
                         <Container className="stroke-blue-500" height={30}/>
                         <span className="flex flex-col">
                             <p className="">{data.service?.name}</p>
@@ -23,22 +23,48 @@ export default function ServiceNode({ data }:{data:{service:Service}}) {
                         </span>
                     </div>
                     <Separator/>
-                    <span>
-                        <Handle className="" id='network' type="source" position={Position.Left}
-                                isConnectable={true}/>
+                    <span className="relative flex items-center pl-6 py-2 transform -translate-x-[16px]">
                         <p>Networks</p>
+                        <Handle
+                            id='network'
+                            type="source"
+                            position={Position.Left}
+                            isConnectable={true}
+                            className="!left-0 !top-1/2 !-translate-y-1/2"
+                        />
                     </span>
                     <Separator/>
-                    <span>
-                        <Handle className="mt-6" id='volume' type="source" position={Position.Right}
-                                isConnectable={true}/>
+                    <span className="relative flex items-center pr-6 py-2 justify-end transform translate-x-[16px]">
                         <p>Volumes</p>
+                        <Handle
+                            id='volume'
+                            type="source"
+                            position={Position.Right}
+                            isConnectable={true}
+                            className="!right-0 !top-1/2 !-translate-y-1/2"
+                        />
                     </span>
                     <Separator/>
-                    <span>
-                        <Handle className="mt-12" id='env' type="source" position={Position.Left}
-                                isConnectable={true}/>
+                    <span className="relative flex items-center pl-6 py-2 transform -translate-x-[16px]">
                         <p>Env</p>
+                        <Handle
+                            id='env'
+                            type="source"
+                            position={Position.Left}
+                            isConnectable={true}
+                            className="!left-0 !top-1/2 !-translate-y-1/2"
+                        />
+                    </span>
+                    <Separator/>
+                    <span className="relative flex items-center pl-6 py-2 transform -translate-x-[16px]">
+                        <p>Label</p>
+                        <Handle
+                            id='label'
+                            type="source"
+                            position={Position.Left}
+                            isConnectable={true}
+                            className="!left-0 !top-1/2 !-translate-y-1/2"
+                        />
                     </span>
                 </CardContent>
             </Card>

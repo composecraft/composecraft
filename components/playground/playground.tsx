@@ -10,7 +10,7 @@ import {useComposeStore} from "@/store/compose";
 import ServiceNode from "@/components/playground/node/serviceNode";
 import NetworkNode from "@/components/playground/node/networkNode";
 import {Binding, Compose, Env, SuperSet, Volume} from "@composecraft/docker-compose-lib";
-import {dependencyEdgeStyle, envEdgeStyle, networkEdgeStyle, volumeEdgeStyle} from "@/components/playground/node/utils";
+import {dependencyEdgeStyle, envEdgeStyle, networkEdgeStyle, volumeEdgeStyle,labelEdgeStyle} from "@/components/playground/node/utils";
 import ELK from 'elkjs/lib/elk.bundled.js';
 
 import '@xyflow/react/dist/style.css'
@@ -20,6 +20,7 @@ import BindingNode from "@/components/playground/node/bindingNode";
 import EnvNode from "@/components/playground/node/envNode";
 import usePositionMap from "@/store/metadataMap";
 import {handleBackspacePress} from "./playgroundUtils";
+import LabelNode from "./node/labelNode";
 
 export type NodeData = {
     position: XYPosition,
@@ -68,7 +69,8 @@ const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
             network: NetworkNode,
             volume: VolumeNode,
             binding: BindingNode,
-            env: EnvNode
+            env: EnvNode,
+            label: LabelNode
         }
     ), [])
 
@@ -229,6 +231,15 @@ function composeToNodes(compose: Compose): Node[] {
                 } as Node)
             }
         })
+        service.labels?.forEach(label=>{
+            result.push({
+                id: label.id,
+                position: positionMap.get(label.id)?.position || {x: 10, y: 10},
+                type: "label",
+                data: {label},
+                draggable: true
+        })
+        })
     })
     compose.networks.forEach((network) => result.push({
         id: network.id,
@@ -269,6 +280,16 @@ function composeToEdge(compose: Compose): Edge[] {
                 sourceHandle: 'network',
                 targetHandle: 'network',
                 ...networkEdgeStyle
+            } as Edge)
+        })
+        service.labels?.forEach(label=>{
+            result.push({
+                id: "edg-" + label.id + service.id,
+                source: service.id,
+                target: label.id,
+                sourceHandle: 'label',
+                targetHandle: 'label',
+                ...labelEdgeStyle
             } as Edge)
         })
         service.bindings.forEach((binding) => {

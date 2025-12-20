@@ -14,15 +14,12 @@ import {
 import {Input} from "@/components/ui/input";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
 import {Button} from "@/components/ui/button";
-import {Eraser, EthernetPort, FolderTree} from "lucide-react";
+import {Eraser, EthernetPort, FolderTree, Tag} from "lucide-react";
 import QuickToolType from "@/components/ui/quickToolType";
 import {Tabs, TabsContent, TabsList, TabsTrigger} from "@/components/ui/tabs";
 import {Separator} from "@/components/ui/separator";
 import DurationInput from "@/components/playground/editor/durationInput";
 import {addExtraDots} from "@/lib/utils";
-import {Dialog, DialogClose, DialogContent, DialogFooter, DialogHeader, DialogTrigger} from "@/components/ui/dialog";
-import LabelEditor from "@/components/playground/editor/labelEditor";
-import {useState} from "react";
 
 export default function ServiceEditor(){
 
@@ -36,27 +33,6 @@ export default function ServiceEditor(){
         }
         throw Error(`${selectedId} service is not found`)
     }
-
-    function labelsToText(labels:KeyValue[]):string{
-        let result = ""
-        labels.forEach(label=>{
-            result = result+`${label.key}=${label.value}\n`
-        })
-        return result
-    }
-
-    function textToLabels(text: string): KeyValue[] {
-        // Split the input text by new lines
-        const lines = text.trim().split('\n');
-
-        // Map each line to a KeyValue object
-        return lines.map(line => {
-            const [key, value] = line.split('=');
-            return new KeyValue(key,value)
-        });
-    }
-
-    const [labelString,setLabelString] = useState(labelsToText(getService().labels||[]))
 
     return (
         <form className="flex flex-col gap-5">
@@ -167,27 +143,19 @@ export default function ServiceEditor(){
                         />
                     </div>
                     <div>
-                        <Dialog>
-                            <DialogTrigger asChild>
-                                <Button variant="outline" className="w-full">Edit service labels</Button>
-                            </DialogTrigger>
-                            <DialogContent>
-                                <DialogHeader className="font-bold">Edit Service "{getService().name}" labels</DialogHeader>
-                                <LabelEditor value={labelString} setValue={setLabelString} />
-                                <DialogFooter>
-                                    <DialogClose asChild>
-                                        <Button variant="secondary">Cancel</Button>
-                                    </DialogClose>
-                                    <DialogClose asChild>
-                                    <Button type="button" onClick={()=>{
-                                        setCompose(()=>{
-                                            getService().labels = textToLabels(labelString)
-                                        })
-                                    }}>Save</Button>
-                                    </DialogClose>
-                                </DialogFooter>
-                            </DialogContent>
-                        </Dialog>
+                        <Button type="button"
+                                className="flex flex-row gap-2" onClick={() => {
+                            setCompose(()=>{
+                                if(getService().labels){
+                                    getService().labels?.push(new KeyValue("com.to_set","","lab_"))
+                                }else{
+                                    getService().labels = [new KeyValue("com.to_set","","lab_")]
+                                }
+                            })
+                        }}>
+                            <Tag height={20}/>
+                            Add Label
+                        </Button>
                     </div>
                 </TabsContent>
                 <TabsContent value="volume">

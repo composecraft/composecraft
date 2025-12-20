@@ -3,7 +3,6 @@
 import client from "@/lib/mongodb"
 import {z} from "zod";
 import {zfd} from "zod-form-data";
-import {actionClient, PassToClientError} from "@/lib/safe-action";
 import bcrypt from "bcryptjs";
 import {registerUserToBrevo, sendRecoverPassdEmail, updateUserList} from "@/lib/brevo";
 import {cookies} from 'next/headers'
@@ -75,7 +74,7 @@ export async function createOrLoginUser(email:string,data:any):Promise<string>{
 export async function registerUser(email:string, password:string, company:string, terms:boolean,data:string) {
     if(process.env.DISABLE_SIGNUP){
         console.error("Signup is disabled")
-        throw new PassToClientError("Signup is disabled")
+        throw new Error("Signup is disabled")
     }
     // eslint-disable-next-line no-useless-catch
     await client.connect()
@@ -197,63 +196,68 @@ export const getAllMyComposeOrderByEditDate = async () => {
     }
 };
 
-const loginSchema = zfd.formData({
-    email: z.string().email(),
-    password: z.string().min(6).max(100)
-})
+export async function loginUser(prevState: any, formData: FormData) {
+    const loginSchema = zfd.formData({
+        email: z.string().email(),
+        password: z.string().min(6).max(100)
+    });
 
-export const loginUser = actionClient
-    .schema(loginSchema)
-    .action(async ({parsedInput: {email, password}}) => {
-        // eslint-disable-next-line no-useless-catch
-        try {
-            await client.connect()
-            const db = client.db("compose_craft")
+    try {
+        const { email, password } = loginSchema.parse({
+            email: formData.get('email'),
+            password: formData.get('password')
+        });
 
-            // Find the user in the database by email
-            const collection = db.collection("users")
-            const user = await collection.findOne({email: email});
+        await client.connect();
+        const db = client.db("compose_craft");
 
-            // If the user doesn't exist, throw an error
-            if (!user) {
-                throw new Error("Invalid email or password");
-            }
+        // Find the user in the database by email
+        const collection = db.collection("users");
+        const user = await collection.findOne({email: email});
 
-            // Compare the hashed password with the input password
-            const passwordMatch = await bcrypt.compare(password, user.password);
-
-            // If the password doesn't match, throw an error
-            if (!passwordMatch) {
-                throw new Error("Invalid email or password");
-            }
-
-            const secretKey = process.env.SECRET_KEY
-            if (!secretKey) {
-                return {failure: "error on our admin system"}
-            }
-
-            // Generate a JWT token upon successful login
-            const token = await new SignJWT({userId: user._id, email: user.email})
-                .setProtectedHeader({alg: 'HS256'})
-                .setExpirationTime('31d') // Set token expiration to 31 days
-                .sign(new TextEncoder().encode(secretKey));
-
-            // Set the JWT token in an HTTP-only cookie
-            (await cookies()).set({
-                name: "token",
-                expires: new Date(Date.now() + 29 * 24 * 60 * 60 * 1000),
-                value: token,
-                httpOnly: true,
-                path: "/"
-            })
-
-            // Redirect to the dashboard after successful login
-            redirect("/dashboard")
-
-        } catch (e) {
-            throw e;
+        // If the user doesn't exist, throw an error
+        if (!user) {
+            throw new Error("Invalid email or password");
         }
-    })
+
+        // Compare the hashed password with the input password
+        const passwordMatch = await bcrypt.compare(password, user.password);
+
+        // If the password doesn't match, throw an error
+        if (!passwordMatch) {
+            throw new Error("Invalid email or password");
+        }
+
+        const secretKey = process.env.SECRET_KEY;
+        if (!secretKey) {
+            return {failure: "error on our admin system"};
+        }
+
+        // Generate a JWT token upon successful login
+        const token = await new SignJWT({userId: user._id, email: user.email})
+            .setProtectedHeader({alg: 'HS256'})
+            .setExpirationTime('31d') // Set token expiration to 31 days
+            .sign(new TextEncoder().encode(secretKey));
+
+        // Set the JWT token in an HTTP-only cookie
+        (await cookies()).set({
+            name: "token",
+            expires: new Date(Date.now() + 29 * 24 * 60 * 60 * 1000),
+            value: token,
+            httpOnly: true,
+            path: "/"
+        });
+
+        // Return success response instead of redirecting
+        return { success: true };
+
+    } catch (e) {
+        if (e instanceof Error) {
+            return { error: e.message };
+        }
+        return { error: "An unknown error occurred" };
+    }
+}
 
 export async function getApiToken(email:string,password:string):Promise<string>{
     // eslint-disable-next-line no-useless-catch
@@ -430,85 +434,99 @@ export const deleteCompose = async (composeId:string) => {
     }
 }
 
-const passwordAskSchema = zfd.formData({
-    email: z.string().email(),
-})
+export async function askPasswordReset(prevState: any, formData: FormData) {
+    const passwordAskSchema = zfd.formData({
+        email: z.string().email(),
+    });
 
-export const askPasswordReset = actionClient
-    .schema(passwordAskSchema)
-    .action(async ({parsedInput: {email}}) => {
-        // eslint-disable-next-line no-useless-catch
-        try {
-            await client.connect()
-            const db = client.db("compose_craft")
+    try {
+        const { email } = passwordAskSchema.parse({
+            email: formData.get('email')
+        });
 
-            // Find the user in the database by email
-            const collection = db.collection("users")
-            const user = await collection.findOne({email: email});
+        await client.connect();
+        const db = client.db("compose_craft");
 
-            if(!user){
-                throw new Error("This email is not associated with any account")
-            }else{
-                const code = generateRandomString()
-                const code_collec = db.collection("reset_code")
-                const inserted = await code_collec.insertOne({
-                    code : code,
-                    type: email,
-                    createdAt: new Date().getTime(),
-                    userId: user._id
-                })
-                if(inserted){
-                    sendRecoverPassdEmail(email,code)
-                    return true
-                }
-                else{
-                    throw new Error("server side error")
-                }
+        // Find the user in the database by email
+        const collection = db.collection("users");
+        const user = await collection.findOne({email: email});
+
+        if(!user){
+            throw new Error("This email is not associated with any account");
+        }else{
+            const code = generateRandomString();
+            const code_collec = db.collection("reset_code");
+            const inserted = await code_collec.insertOne({
+                code : code,
+                type: email,
+                createdAt: new Date().getTime(),
+                userId: user._id
+            });
+            if(inserted){
+                sendRecoverPassdEmail(email,code);
+                return { success: true };
             }
-        } catch (e) {
-            throw e;
-        }
-    })
-
-const passwordResetSchema = zfd.formData({
-    password: z.string().min(5,"Password length > 6"),
-    password2: z.string(),
-    code: z.string(),
-})
-
-export const passwordReset = actionClient
-    .schema(passwordResetSchema)
-    .action(async ({parsedInput: {password, password2,code}}) => {
-        if(password !== password2){
-            throw new PassToClientError("Passwords are not the sames")
-        }
-        try{
-            await client.connect()
-            const db = client.db("compose_craft")
-            const code_collec = db.collection("reset_code")
-            const resetCode = await code_collec.findOne({code:code})
-            if(!resetCode){
-                throw new PassToClientError("The code is invalid")
-            }
-            if(!isWithinOneDay(Number(resetCode?.createdAt),new Date().getTime())){
-                throw new PassToClientError("The code is outdated")
-            }
-
-            //here everything has been checked
-            await code_collec.deleteOne({code:code})
-            const user_collec = db.collection("users")
-            const hashedPassword = await bcrypt.hash(password, 10);
-            const res = await user_collec.updateOne({_id : resetCode.userId},{
-                $set:{password: hashedPassword}
-            })
-            if(res){
-                return
-            }
-            throw new PassToClientError("Can't change password for unknown reason, server error")
-        }catch (e){
-            console.error(e)
-            if(e instanceof PassToClientError){
-                throw e
+            else{
+                throw new Error("server side error");
             }
         }
-    })
+    } catch (e) {
+        if (e instanceof Error) {
+            return { error: e.message };
+        }
+        return { error: "An unknown error occurred" };
+    }
+}
+
+export async function passwordReset(prevState: any, formData: FormData) {
+    const passwordResetSchema = zfd.formData({
+        password: z.string().min(5, "Password length > 6"),
+        password2: z.string(),
+        code: z.string(),
+    });
+
+    try {
+        const { password, password2, code } = passwordResetSchema.parse({
+            password: formData.get('password'),
+            password2: formData.get('password2'),
+            code: formData.get('code')
+        });
+
+        if (password !== password2) {
+            throw new Error("Passwords are not the same");
+        }
+
+        await client.connect();
+        const db = client.db("compose_craft");
+        const code_collec = db.collection("reset_code");
+        const resetCode = await code_collec.findOne({code: code});
+
+        if (!resetCode) {
+            throw new Error("The code is invalid");
+        }
+
+        if (!isWithinOneDay(Number(resetCode?.createdAt), new Date().getTime())) {
+            throw new Error("The code is outdated");
+        }
+
+        //here everything has been checked
+        await code_collec.deleteOne({code: code});
+        const user_collec = db.collection("users");
+        const hashedPassword = await bcrypt.hash(password, 10);
+        const res = await user_collec.updateOne({_id: resetCode.userId}, {
+            $set: {password: hashedPassword}
+        });
+
+        if (res) {
+            return { success: true };
+        }
+
+        throw new Error("Can't change password for unknown reason, server error");
+
+    } catch (e) {
+        if (e instanceof Error) {
+            return { error: e.message };
+        }
+        return { error: "An unknown error occurred" };
+    }
+}

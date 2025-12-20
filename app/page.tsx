@@ -1,3 +1,5 @@
+"use server"
+
 import { redirect } from 'next/navigation';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
@@ -21,5 +23,3 @@ export default async function Page() {
         redirect('/login');
     }
 }
-
-export const dynamic = "force-dynamic";

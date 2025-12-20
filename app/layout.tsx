@@ -5,8 +5,11 @@ import {Toaster} from "react-hot-toast";
 
 import { DM_Sans } from 'next/font/google'
 import CoreBanner from "@/components/ui/coreBanner";
+import VersionUpdateBanner from "@/components/ui/versionUpdateBanner";
 import Instrumentation from "@/components/instrumentation";
 import Script from "next/script";
+import { getCachedLastVersion } from "@/lib/utils";
+import { version as packageVersion } from "@/package.json"
 
 const dm_sans = DM_Sans({ subsets: ['latin'] })
 
@@ -31,11 +34,23 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+
+  let version = packageVersion
+  try {
+    version = await getCachedLastVersion()
+  } catch (error) {
+    console.error("Failed to fetch latest version:", error)
+    // Continue with current version if fetch fails
+  }
+
+  const showUpdateBanner = version != packageVersion
+
   return (
     <html lang="en">
       <head>
@@ -58,6 +73,12 @@ export default function RootLayout({
           reverseOrder={false}
       />
       <CoreBanner />
+      {showUpdateBanner && (
+        <VersionUpdateBanner
+          currentVersion={packageVersion}
+          latestVersion={version}
+        />
+      )}
       {children}
       </body>
     </html>

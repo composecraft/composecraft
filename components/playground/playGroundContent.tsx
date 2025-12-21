@@ -13,7 +13,8 @@ import {default as NextImage} from "next/image";
 import logo from "@/assets/logo.png";
 import {Button} from "@/components/ui/button";
 import YAML from "yaml";
-import {Code, FileDown, FileUp, FlaskRound, Library, Sparkles} from "lucide-react";
+import {Code, FileDown, FileUp, FlaskRound, Library, Sparkles, Image} from "lucide-react";
+import { toPng } from 'html-to-image';
 import {
     Dialog,
     DialogContent,
@@ -23,6 +24,7 @@ import {
 import YamlEditor from "@/components/playground/yamlEditor";
 import EditMenu from "@/components/playground/editMenu";
 import ShareButton from "@/components/playground/shareButton";
+import IntegrateGitHubButton from "@/components/playground/integrateGitHubButton";
 import useDisableStateStore from "@/store/disabled";
 // @ts-ignore
 import { Base64UrlEncoder } from "next-base64-encoder";
@@ -53,6 +55,47 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
 
     const [errorDialog,setErroDialog] = useState(false)
     const [rawImportedFile, setRawImportedFile] = useState("")
+
+    const exportPlaygroundAsPNG = async () => {
+        const playgroundContainer = document.querySelector('.react-flow');
+        if (!playgroundContainer) {
+            toast.error('Playground not found');
+            return;
+        }
+
+        try {
+
+            // Hide controls temporarily
+            playgroundRef.current?.setHideControls(true);
+            
+            // Wait a frame for the DOM to update
+            await new Promise(resolve => setTimeout(resolve, 50));
+            
+            const dataUrl = await toPng(playgroundContainer as HTMLElement, {
+                backgroundColor: undefined,
+                quality: 1.0,
+                pixelRatio: 2,
+                cacheBust: true
+            });
+
+            // Show controls again
+            playgroundRef.current?.setHideControls(false);
+
+            const link = document.createElement('a');
+            link.download = `playground-${compose.name || 'export'}.png`;
+            link.href = dataUrl;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+
+            toast.success('Playground exported as PNG!');
+        } catch (error) {
+            console.error('Error exporting playground as PNG:', error);
+            toast.error('Failed to export playground as PNG');
+            // Make sure controls are visible again even if there's an error
+            playgroundRef.current?.setHideControls(false);
+        }
+    };
 
     useEffect( () => {
         if(inviteMode){
@@ -183,7 +226,15 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                             variant="secondary" onClick={() => playgroundRef.current?.onLayout("TB")}>
                         Auto layout
                     </Button>
+                    <Button 
+                        onClick={exportPlaygroundAsPNG}
+                        variant="secondary" 
+                        className="bg-slate-200 flex gap-2">
+                        <Image height={20}/>
+                        Export PNG
+                    </Button>
                     <ShareButton inviteMode={inviteMode}/>
+                    <IntegrateGitHubButton inviteMode={inviteMode}/>
                     <Button variant="secondary" className="bg-slate-200">
                         ...
                     </Button>

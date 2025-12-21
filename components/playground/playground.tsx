@@ -29,15 +29,21 @@ export type NodeData = {
 
 export interface PlaygroundHandle {
     onLayout: (direction: string) => void;
+    setHideControls: (hide: boolean) => void;
 }
 
-const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
+export interface PlaygroundProps {
+    hideControlsByDefault?: boolean;
+}
+
+const Playground = forwardRef<PlaygroundHandle, PlaygroundProps>(({ hideControlsByDefault = false }, ref) => {
 
     const {compose, setCompose} = useComposeStore();
     const [select, setSelect] = useState("")
     const {positionMap, setPositionMap} = usePositionMap()
     const {setSelectedString} = useSelectionStore()
     const [isDraggable, setIsDraggable] = useState(true)
+    const [hideControls, setHideControls] = useState(hideControlsByDefault)
 
     const updatePosition = useCallback((key: string, newPosition: XYPosition) => {
         const currentEntry = positionMap.get(key);
@@ -141,7 +147,8 @@ const Playground = forwardRef<PlaygroundHandle>((_, ref) => {
 
 
 useImperativeHandle(ref, () => ({
-    onLayout
+    onLayout,
+    setHideControls
 }));
 
 const onNodesChanges = useCallback(
@@ -385,10 +392,10 @@ return (
             setSelectedString("")
         }}
     >
-        <Controls
+        {!hideControls && <Controls
             onInteractiveChange={(isInteractive) => setIsDraggable(isInteractive)}
-        />
-        <Background variant={"dots" as BackgroundVariant} gap={12} size={1}/>
+        />}
+        {!hideControls &&  <Background variant={"dots" as BackgroundVariant} gap={12} size={1}/>}
     </ReactFlow>
 )
 }

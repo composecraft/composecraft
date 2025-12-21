@@ -28,7 +28,9 @@ export async function middleware(req: NextRequest) {
 
         } catch (error) {
             console.error("JWT verification failed:", error);
-            return NextResponse.redirect(new URL("/", req.url));
+            const response = NextResponse.redirect(new URL("/", req.url));
+            response.cookies.delete("token");
+            return response;
         }
     } else if (req.nextUrl.pathname.includes("/login") && !req.nextUrl.pathname.includes("/cli")) {
         const rawToken = (await cookies()).get("token")?.value;
@@ -40,7 +42,9 @@ export async function middleware(req: NextRequest) {
             }
         } catch (error) {
             console.error("JWT verification failed:", error);
-            return NextResponse.redirect(new URL("/", req.url));
+            const response = NextResponse.redirect(new URL("/", req.url));
+            response.cookies.delete("token");
+            return response;
         }
     } else if (req.nextUrl.pathname.includes("/signin")) {
         const rawToken = (await cookies()).get("token")?.value;
@@ -52,7 +56,9 @@ export async function middleware(req: NextRequest) {
             }
         } catch (error) {
             console.error("JWT verification failed:", error);
-            return NextResponse.redirect(new URL("/", req.url));
+            const response = NextResponse.redirect(new URL("/", req.url));
+            response.cookies.delete("token");
+            return response;
         }
     }
 

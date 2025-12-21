@@ -29,9 +29,16 @@ RUN npm install -g corepack@latest && corepack enable pnpm && pnpm run build;
 FROM base AS runner
 WORKDIR /app
 
+# Install Chrome dependencies and Puppeteer before switching users
+RUN apk add --no-cache chromium ca-certificates
+
 ENV NODE_ENV=production
 # Uncomment the following line in case you want to disable telemetry during runtime.
 ENV NEXT_TELEMETRY_DISABLED=1
+
+# Set Puppeteer to use the system Chromium
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
 
 RUN addgroup --system --gid 1001 nodejs
 RUN adduser --system --uid 1001 nextjs

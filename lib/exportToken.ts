@@ -1,25 +1,29 @@
+import { randomBytes } from 'crypto';
+
 /**
- * Get the export render token from environment variables
- * The token is stored in .env for consistency across Node.js and Edge Runtime contexts
+ * Generate a unique token that is stored in memory
+ * A new token is generated on each app run
+ */
+function generateUniqueToken(): string {
+    return randomBytes(32).toString('hex');
+}
+
+// Initialize the token on module load
+let exportRenderToken: string = generateUniqueToken();
+
+/**
+ * Get the in-memory export render token
+ * A unique token is generated on each app run and kept in memory
  */
 export function getExportRenderToken(): string {
-    const token = process.env.EXPORT_RENDER_TOKEN;
-
-    if (!token) {
-        throw new Error(
-            'EXPORT_RENDER_TOKEN is not defined in environment variables. ' +
-            'Please set it in your .env file or environment.'
-        );
-    }
-
-    return token;
+    return exportRenderToken;
 }
 
 /**
- * Reset the token (mainly for testing purposes)
- * Note: This function doesn't actually reset the environment variable,
- * but can be called to log that a reset was requested
+ * Reset the token to a new random value
+ * Mainly for testing purposes
  */
 export function resetExportRenderToken(): void {
-    console.log('[ExportToken] Token reset requested (token is stored in .env)');
+    exportRenderToken = generateUniqueToken();
+    console.log('[ExportToken] Token reset to new value');
 }

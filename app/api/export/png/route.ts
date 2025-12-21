@@ -8,18 +8,41 @@ import { exportPlaygroundAsPNG } from '@/app/actions/exportActions';
 
 export async function GET(request: NextRequest) {
     try {
-        const composeId = request.nextUrl.searchParams.get('id');
+        const shareId = request.nextUrl.searchParams.get('shareId');
         
-        if (!composeId) {
+        if (!shareId) {
             return NextResponse.json(
-                { error: 'Compose ID is required' },
+                { error: 'Share ID is required' },
                 { status: 400 }
             );
         }
 
-        // Get compose data and metadata from database
+        // Get compose data and metadata from database via share
         await client.connect();
         const db = client.db('compose_craft');
+        const sharesCollection = db.collection('shares');
+
+        // First, find the share to get the composeId
+        const share = await sharesCollection.findOne({
+            _id: new ObjectId(shareId)
+        });
+
+        if (!share) {
+            return NextResponse.json(
+                { error: 'Share not found' },
+                { status: 404 }
+            );
+        }
+
+        // Verify share is public
+        if (share.access !== 'public') {
+            return NextResponse.json(
+                { error: 'Share is not public' },
+                { status: 403 }
+            );
+        }
+
+        const composeId = share.composeId;
         const collection = db.collection('composes');
 
         const compose = await collection.findOne({

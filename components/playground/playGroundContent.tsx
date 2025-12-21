@@ -24,6 +24,7 @@ import {
 import YamlEditor from "@/components/playground/yamlEditor";
 import EditMenu from "@/components/playground/editMenu";
 import ShareButton from "@/components/playground/shareButton";
+import IntegrateGitHubButton from "@/components/playground/integrateGitHubButton";
 import useDisableStateStore from "@/store/disabled";
 // @ts-ignore
 import { Base64UrlEncoder } from "next-base64-encoder";
@@ -54,7 +55,6 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
 
     const [errorDialog,setErroDialog] = useState(false)
     const [rawImportedFile, setRawImportedFile] = useState("")
-    const [isExporting, setIsExporting] = useState(false)
 
     const exportPlaygroundAsPNG = async () => {
         const playgroundContainer = document.querySelector('.react-flow');
@@ -94,42 +94,6 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
             toast.error('Failed to export playground as PNG');
             // Make sure controls are visible again even if there's an error
             playgroundRef.current?.setHideControls(false);
-        }
-    };
-
-    const exportPlaygroundAsPNGServerSide = async () => {
-        try {
-            setIsExporting(true);
-            const id = searchParams.get('id');
-            if (!id) {
-                toast.error('Compose ID not found');
-                return;
-            }
-            
-            // Call the API route to download the PNG
-            const response = await fetch(`/api/export/png?id=${encodeURIComponent(id)}`);
-            
-            if (!response.ok) {
-                const error = await response.json();
-                throw new Error(error.error || 'Failed to export playground');
-            }
-            
-            const blob = await response.blob();
-            const url = URL.createObjectURL(blob);
-            const link = document.createElement('a');
-            link.href = url;
-            link.download = `playground-${compose.name || 'export'}.png`;
-            document.body.appendChild(link);
-            link.click();
-            document.body.removeChild(link);
-            URL.revokeObjectURL(url);
-            
-            toast.success('Playground exported as PNG!');
-        } catch (error) {
-            console.error('Error exporting playground as PNG (server side):', error);
-            toast.error('Failed to export playground as PNG (server side)');
-        } finally {
-            setIsExporting(false);
         }
     };
 
@@ -269,15 +233,8 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                         <Image height={20}/>
                         Export PNG
                     </Button>
-                    <Button 
-                        onClick={exportPlaygroundAsPNGServerSide}
-                        variant="secondary" 
-                        disabled={isExporting}
-                        className="bg-slate-200 flex gap-2">
-                        <Image height={20}/>
-                        {isExporting ? 'Exporting...' : 'Export PNG (server)'}
-                    </Button>
                     <ShareButton inviteMode={inviteMode}/>
+                    <IntegrateGitHubButton inviteMode={inviteMode}/>
                     <Button variant="secondary" className="bg-slate-200">
                         ...
                     </Button>

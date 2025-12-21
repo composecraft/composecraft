@@ -1,105 +1,27 @@
-'use client';
+import { redirect } from 'next/navigation';
+import { getExportRenderToken } from '@/lib/exportToken';
+import ExportRenderContent from './ExportRenderContent';
 
-import { useSearchParams } from "next/navigation";
-import { useEffect, useState, useRef } from "react";
-import { Translator } from "@composecraft/docker-compose-lib";
-import { getComposeByIdPublic } from "@/actions/userActions";
-import { composeMetadata, recreatePositionMap, reHydrateComposeIds } from "@/lib/metadata";
-import { useComposeStore } from "@/store/compose";
-import usePositionMap from "@/store/metadataMap";
-import useDisableStateStore from "@/store/disabled";
-import Playground, { PlaygroundHandle } from "@/components/playground/playground";
-import '@xyflow/react/dist/style.css';
+interface ExportRenderPageProps {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
 
-export default function ExportRenderPage() {
-    const searchParams = useSearchParams();
-    const { replaceCompose } = useComposeStore();
-    const { setPositionMap } = usePositionMap();
-    const { setState } = useDisableStateStore();
-    const playgroundRef = useRef<PlaygroundHandle>(null);
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+export default async function ExportRenderPage({ searchParams }: ExportRenderPageProps) {
+    const params = await searchParams;
+    const token = params.token as string | undefined;
+    const id = params.id as string | undefined;
 
-    useEffect(() => {
-        // Token validation is handled by middleware, so if we reach this page, the request is authorized
-        // Disable save state
-        setState(true);
-
-        const id = searchParams.get('id');
-        if (!id) {
-            setError('No compose ID provided');
-            setIsLoading(false);
-            return;
-        }
-
-        const loadCompose = async () => {
-            try {
-                const result = await getComposeByIdPublic(id);
-                
-                if (!result || !result.data) {
-                    setError('Compose not found');
-                    setIsLoading(false);
-                    return;
-                }
-
-                const metadata: composeMetadata = result.metadata;
-                const data = result.data;
-
-                if (data) {
-                    const savedCompose = Translator.fromDict(data);
-                    if (metadata) {
-                        reHydrateComposeIds(savedCompose, metadata);
-                        setPositionMap(recreatePositionMap(metadata.positionMap));
-                    }
-                    replaceCompose(savedCompose, { disableSave: true });
-                    
-                    // Trigger layout if no metadata
-                    if (!metadata) {
-                        setTimeout(() => {
-                            playgroundRef.current?.onLayout("TB");
-                        }, 500);
-                    }
-
-                    // Wait a bit for the playground to render, then signal ready
-                    setTimeout(() => {
-                        setIsLoading(false);
-                        // Signal to puppeteer that we're ready
-                        if (typeof window !== 'undefined') {
-                            (window as any).__PLAYGROUND_READY__ = true;
-                        }
-                    }, 1000);
-                } else {
-                    setError('No data found');
-                    setIsLoading(false);
-                }
-            } catch (err) {
-                console.error('Error loading compose:', err);
-                setError('Failed to load compose');
-                setIsLoading(false);
-            }
-        };
-
-        loadCompose();
-    }, [searchParams, replaceCompose, setPositionMap, setState]);
-
-    if (error) {
-        return <div style={{ padding: '20px', color: 'red' }}>{error}</div>;
+    // Server-side token validation
+    const validToken = getExportRenderToken();
+    
+    if (!token || token !== validToken) {
+        console.error("Invalid or missing export render token");
+        redirect('/');
     }
 
-    return (
-        <div
-            style={{
-                width: '100vw',
-                height: '100vh',
-                margin: 0,
-                padding: 0,
-                overflow: 'hidden',
-                background: '#FFFF00' // Unique yellow color for background removal in export
-            }}
-        >
-            {!isLoading && (
-                <Playground ref={playgroundRef} hideControlsByDefault={true} />
-            )}
-        </div>
-    );
+    if (!id) {
+        return <div style={{ padding: '20px', color: 'red' }}>No compose ID provided</div>;
+    }
+
+    return <ExportRenderContent id={id} />;
 }

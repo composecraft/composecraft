@@ -335,6 +335,36 @@ export const getComposeById = async (composeId: string) => {
     }
 };
 
+export const getComposeByIdPublic = async (composeId: string) => {
+    await client.connect();
+    const db = client.db("compose_craft");
+    const collection = db.collection("composes");
+
+    try {
+        // Convert the composeId string to ObjectId
+        const compose = await collection.findOne({
+            _id: new ObjectId(composeId)
+        });
+
+        // Return undefined if no compose is found
+        if (!compose) {
+            return undefined;
+        }
+
+        // Return the formatted compose data
+        return {
+            id: compose._id.toString(),
+            data: compose.data,
+            metadata: compose?.metadata,
+            createdAt: compose.createdAt,
+            updatedAt: compose.updatedAt
+        };
+    } catch (error) {
+        console.error(error);
+        throw new Error("Failed to fetch compose");
+    }
+};
+
 export const getMyInfos = async () => {
     const payload = await ensureAuth()
 

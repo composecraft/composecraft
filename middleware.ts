@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import { cookies } from 'next/headers';
 import { jwtVerify } from 'jose';
+import { getExportRenderToken } from '@/lib/exportToken';
 
 export async function middleware(req: NextRequest) {
     // Check if SECRET_KEY is configured
@@ -13,6 +14,20 @@ export async function middleware(req: NextRequest) {
     }
 
     const encodedSecretKey = new TextEncoder().encode(secretKey);
+
+    // Protect /playground/export-render route - only allow requests with valid token
+    if (req.nextUrl.pathname.includes("/playground/export-render")) {
+        const token = req.nextUrl.searchParams.get("token");
+        const validToken = getExportRenderToken();
+
+        if (!token || token !== validToken) {
+            console.error("Invalid or missing export render token");
+            return NextResponse.json(
+                { error: "Unauthorized - Invalid or missing token" },
+                { status: 401 }
+            );
+        }
+    }
 
     // Apply checkAuth to routes under /dashboard
     if (req.nextUrl.pathname.includes("/dashboard")) {

@@ -1,7 +1,6 @@
 import axios from "axios"
 import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
-import { unstable_cache } from 'next/cache'
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
@@ -65,30 +64,31 @@ export async function GetLastVersion():Promise<string>{
   return data?.tag_name
 }
 
-export const getCachedLastVersion = async (): Promise<string> => {
-  const cacheKey = 'last-version'
-  const cacheDuration = 6 * 60 * 60 * 1000 // 6 hours in milliseconds
+// Runtime cache - stored in memory, created at runtime, not build time
+let cachedVersion: { version: string | undefined; timestamp: number } | null = null
+const CACHE_DURATION = 6 * 60 * 60 * 1000 // 6 hours in milliseconds
 
-  // Try to get cached version first
-  const cachedVersion = await unstable_cache(
-    async () => {
-      try {
-        const res = await axios.get(
-          "https://api.github.com/repos/composecraft/composecraft/releases/latest",
-        );
-        const data = res.data
-        return data?.tag_name
-      } catch (error) {
-        console.error("Failed to fetch latest version:", error)
-        return undefined
-      }
-    },
-    [cacheKey],
-    {
-      revalidate: cacheDuration / 1000, // Convert to seconds
-      tags: [cacheKey]
-    }
-  )()
-
-  return cachedVersion
+export const getCachedLastVersion = async (): Promise<string | undefined> => {
+  const now = Date.now()
+  
+  // Return cached version if it exists and hasn't expired
+  if (cachedVersion && (now - cachedVersion.timestamp) < CACHE_DURATION) {
+    return cachedVersion.version
+  }
+  
+  try {
+    const res = await axios.get(
+      "https://api.github.com/repos/composecraft/composecraft/releases/latest",
+    );
+    const data = res.data
+    const version = data?.tag_name.substring(1)
+    
+    // Update cache with new version and current timestamp
+    cachedVersion = { version, timestamp: now }
+    
+    return version
+  } catch (error) {
+    console.error("Failed to fetch latest version:", error)
+    return undefined
+  }
 }

@@ -44,7 +44,7 @@ export default async function RootLayout({
 
   let version = packageJson.version
   try {
-    version = await getCachedLastVersion()
+    version = await getCachedLastVersion() || ""
   } catch (error) {
     console.error("Failed to fetch latest version:", error)
     // Continue with current version if fetch fails

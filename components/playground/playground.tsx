@@ -21,6 +21,7 @@ import EnvNode from "@/components/playground/node/envNode";
 import usePositionMap from "@/store/metadataMap";
 import {handleBackspacePress} from "./playgroundUtils";
 import LabelNode from "./node/labelNode";
+import toast from "react-hot-toast";
 
 export type NodeData = {
     position: XYPosition,
@@ -171,10 +172,16 @@ const onNodesChanges = useCallback(
 )
 
 // eslint-disable-next-line
-function onNodesConnect(params: any) {
-    //console.log('connect',params)
+async function onNodesConnect(params: any) {
+    const handleConnection = async (handler: (compose: Compose) => void) => {
+        const connectionSuccessful = await setCompose(handler)
+        if (!connectionSuccessful) {
+            toast.error(`can't assign ${params.targetHandle} handle with ${params.sourceHandle} handle`)
+        }
+    }
+
     if (params.sourceHandle === "network") {
-        setCompose((compose) => {
+        await handleConnection((compose) => {
             const service = compose.services.get("id", params.source)
             const network = compose.networks.get("id", params.target)
             if (service && network) {
@@ -182,7 +189,7 @@ function onNodesConnect(params: any) {
             }
         })
     } else if (params.sourceHandle === "service") {
-        setCompose((compose) => {
+        await handleConnection((compose) => {
             const source = compose.services.get("id", params.source)
             const target = compose.services.get("id", params.target)
             if (source && target) {
@@ -190,7 +197,7 @@ function onNodesConnect(params: any) {
             }
         })
     } else if (params.sourceHandle === "volume") {
-        setCompose((compose) => {
+        await handleConnection((compose) => {
             const service = compose.services.get("id", params.source)
             const volume = compose.volumes.get("id", params.target)
             if (service && volume) {
@@ -201,7 +208,7 @@ function onNodesConnect(params: any) {
             }
         })
     } else if (params.sourceHandle === "env") {
-        setCompose((compose) => {
+        await handleConnection((compose) => {
             const service = compose.services.get("id", params.source)
             const env = compose.envs.get("id", params.target)
             if (service && env) {
@@ -214,6 +221,8 @@ function onNodesConnect(params: any) {
                 }
             }
         })
+    } else {
+        toast.error(`can't assign ${params.targetHandle} handle with ${params.sourceHandle} handle`)
     }
 }
 

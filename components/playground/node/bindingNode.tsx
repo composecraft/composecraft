@@ -11,7 +11,7 @@ export default function BindingNode({ data }:{data:{binding:Binding}}) {
 
     return (
         <Selectable id={data.binding.id}>
-            <Card className={`flex border-2 border-green-500 ${selectedId===data.binding.id ? "bg-green-100" : ""}`}>
+            <Card className={`flex hover:border-dashed hover:bg-slate-50 border-2 border-green-500 ${selectedId===data.binding.id ? "bg-green-100" : ""}`}>
                 <CardContent className="p-3">
                     <div className="flex flex-row gap-3 items-center">
                         <FolderTree className="stroke-green-500" height={30}/>

@@ -11,7 +11,7 @@ export default function EnvNode({ data }:{data:{env:KeyValue}}) {
 
     return (
         <Selectable id={data.env.id}>
-            <Card className={`flex border-2 border-violet-500 ${selectedId===data.env.id ? "bg-violet-100" : ""}`}>
+            <Card className={`flex hover:border-dashed hover:bg-slate-50 border-2 border-violet-500 ${selectedId===data.env.id ? "bg-violet-100" : ""}`}>
                 <CardContent className="p-3">
                     <div className="flex flex-row gap-3 items-center">
                         <Key className="stroke-violet-500" height={30}/>

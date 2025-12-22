@@ -11,7 +11,7 @@ export default function LabelNode({ data }:{data:{label:KeyValue}}) {
 
     return (
         <Selectable id={data.label.id}>
-            <Card className={`flex border-2 border-pink-500 ${selectedId===data.label.id ? "bg-pink-100" : ""}`}>
+            <Card className={`flex hover:border-dashed hover:bg-slate-50 border-2 border-pink-500 ${selectedId===data.label.id ? "bg-pink-100" : ""}`}>
                 <CardContent className="p-3">
                     <div className="flex flex-row gap-3 items-center">
                         <Tag className="stroke-pink-500" height={30}/>

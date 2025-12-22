@@ -13,7 +13,7 @@ export default function ServiceNode({ data }:{data:{service:Service}}) {
     return (
         <Selectable id={data.service.id}>
             <Handle id='service' type="target" position={Position.Top} isConnectable={true} />
-            <Card className={`flex border-2 border-blue-500 ${selectedId===data.service.id ? "bg-blue-100" : ""}`}>
+            <Card className={`flex hover:border-dashed hover:bg-slate-50 border-2 border-blue-500 ${selectedId===data.service.id ? "bg-blue-100" : ""}`}>
                 <CardContent className="p-3">
                     <div className="flex flex-row gap-3 items-center h-[40px]">
                         <Container className="stroke-blue-500" height={30}/>

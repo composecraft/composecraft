@@ -43,7 +43,7 @@
     "lucide-react": "^0.451.0",
     "mongodb": "^6.10.0",
     "mongoose": "^8.9.5",
-    "next": "15.5.8",
+    "next": "15.5.9",
     "next-base64-encoder": "^1.3.0",
     "next-mdx-remote": "^5.0.0",
     "posthog-js": "^1.260.2",

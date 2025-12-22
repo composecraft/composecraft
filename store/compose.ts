@@ -12,7 +12,7 @@ import useDisableStateStore from "@/store/disabled";
 
 interface ComposeState {
     compose: Compose;
-    setCompose: (updater: (currentCompose: Compose) => void) => void;
+    setCompose: (updater: (currentCompose: Compose) => void) => Promise<boolean>;
     replaceCompose: (newCompose: Compose, options?: { disableSave?: boolean }) => void;
 }
 
@@ -37,31 +37,35 @@ export const useComposeStore = create<ComposeState>((set) => {
     return {
         compose: new Compose({ name: generateRandomName() }),
         setCompose: (updater: (currentCompose: Compose) => void) => {
-            set((state) => {
-                const { state:disabledSave } = useDisableStateStore.getState();
-                const previousHash = state.compose.hash()
-                updater(state.compose);
-                const newHash = state.compose.hash()
-                const hasCHanged = newHash !== previousHash
-                // Only save if not explicitly disabled
-                if (!disabledSave) {
-                    setTimeout(() => {
-                        const a = shouldPerformCustom()
-                        if (a && hasCHanged) {
-                            toast.promise(
-                                save(state.compose),
-                                {
-                                    loading: 'Saving...',
-                                    success: "Saved",
-                                    error: "Error on save"
-                                }
-                            )
-                        }
-                    }, 3000)
-                }
+            return new Promise((resolve) => {
+                set((state) => {
+                    const { state:disabledSave } = useDisableStateStore.getState();
+                    const previousHash = state.compose.hash()
+                    updater(state.compose);
+                    const newHash = state.compose.hash()
+                    const hasCHanged = newHash !== previousHash
+                    // Only save if not explicitly disabled
+                    if (!disabledSave) {
+                        setTimeout(() => {
+                            const a = shouldPerformCustom()
+                            if (a && hasCHanged) {
+                                toast.promise(
+                                    save(state.compose),
+                                    {
+                                        loading: 'Saving...',
+                                        success: "Saved",
+                                        error: "Error on save"
+                                    }
+                                )
+                            }
+                        }, 3000)
+                    }
 
-                lastCallTime = Date.now();
-                return { compose: state.compose };
+                    lastCallTime = Date.now();
+                    // Resolve the promise immediately with the hasCHanged value
+                    resolve(hasCHanged);
+                    return { compose: state.compose };
+                });
             });
         },
         replaceCompose: (newCompose: Compose) => {

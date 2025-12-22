@@ -16,7 +16,7 @@ const Selectable: React.FC<WrapperProps> = ({ children, id }) => {
     };
 
     return (
-        <div id={id} onClick={handleClick}>
+        <div id={id} onClick={handleClick} className='active:scale-110 cursor-pointer transition-all duration-150 hover:scale-105 '>
             {children}
         </div>
     );

@@ -11,7 +11,7 @@ export default function NetworkNode({ data }:{data:{network:Network}}) {
 
     return (
         <Selectable id={data.network.id}>
-            <Card className={`flex border-2 border-orange-500 ${selectedId===data.network.id ? "bg-orange-100" : ""}`}>
+            <Card className={`flex hover:border-dashed hover:bg-slate-50 border-2 border-orange-500 ${selectedId===data.network.id ? "bg-orange-100" : ""}`}>
                 <CardContent className="p-3">
                     <div className="flex flex-row gap-3 items-center">
                         <NetworkIcon className="stroke-orange-500" height={30}/>

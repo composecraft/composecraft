@@ -11,7 +11,7 @@ export default function VolumeNode({ data }:{data:{volume:Volume}}) {
 
     return (
         <Selectable id={data.volume.id}>
-            <Card className={`flex border-2 border-green-500 ${selectedId===data.volume.id ? "bg-green-100" : ""}`}>
+            <Card className={`flex hover:border-dashed hover:bg-slate-50 border-2 border-green-500 ${selectedId===data.volume.id ? "bg-green-100" : ""}`}>
                 <CardContent className="p-3">
                     <div className="flex flex-row gap-3 items-center">
                         <Folder className="stroke-green-500" height={30}/>

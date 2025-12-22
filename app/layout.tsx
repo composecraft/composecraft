@@ -42,15 +42,18 @@ export default async function RootLayout({
 }>) {
 
 
-  let version = packageJson.version
+  let version
   try {
-    version = await getCachedLastVersion() || ""
+    version = await getCachedLastVersion() || undefined
   } catch (error) {
     console.error("Failed to fetch latest version:", error)
     // Continue with current version if fetch fails
   }
 
-  const showUpdateBanner = version != packageJson.version
+  let showUpdateBanner = version != packageJson.version
+  if(!version){
+    showUpdateBanner = false
+  }
 
   return (
     <html lang="en">
@@ -77,7 +80,7 @@ export default async function RootLayout({
       {showUpdateBanner && (
         <VersionUpdateBanner
           currentVersion={packageJson.version}
-          latestVersion={version}
+          latestVersion={version||""}
         />
       )}
       {children}

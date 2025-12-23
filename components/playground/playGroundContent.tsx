@@ -234,7 +234,9 @@ export default function PlaygroundContent(opts:PlayGroundContentOptions) {
                         Export PNG
                     </Button>
                     <ShareButton inviteMode={inviteMode}/>
-                    <IntegrateGitHubButton inviteMode={inviteMode}/>
+                    {process.env.NEXT_PUBLIC_DISABLE_GITHUB_INTEGRATION !== '1' && (
+                        <IntegrateGitHubButton inviteMode={inviteMode}/>
+                    )}
                     <Button variant="secondary" className="bg-slate-200">
                         ...
                     </Button>

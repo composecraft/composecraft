@@ -78,3 +78,14 @@ body {
     @apply bg-background text-foreground;
   }
 }
+
+/* ReactFlow edge label styling */
+.react-flow__edge-textbg {
+  fill: white;
+  fill-opacity: 0.9;
+}
+
+.react-flow__edge-text {
+  fill: #1C4ED8;
+  font-weight: 500;
+}

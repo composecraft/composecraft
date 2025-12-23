@@ -20,6 +20,9 @@ export const dependencyEdgeStyle = {
         color: '#1C4ED8',
     },
     label: 'depends_on',
+    labelBgStyle: { fill: 'white', fillOpacity: 0.9 },
+    labelBgPadding: [6, 6] as [number, number],
+    labelStyle: { fill: '#1C4ED8', fontWeight: 500, fontSize: 12 },
 }
 
 export const envEdgeStyle = {
